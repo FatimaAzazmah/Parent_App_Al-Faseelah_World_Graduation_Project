@@ -1,0 +1,14 @@
+{
+  "@@locale": "en",
+  "app_title": "Al Faseelah",
+  "@app_title": {
+    "description": "Application name shown in the task switcher and system UI"
+  },
+  "login": "Log in",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "logout": "Log out",
+  "home": "Home",
+  "settings": "Settings"
+}
