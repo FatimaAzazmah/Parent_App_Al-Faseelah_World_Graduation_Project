@@ -66,6 +66,28 @@ This makes each side robust even when the other is offline.
 
 ---
 
+## 📸 Screenshots
+
+<div align="center">
+
+### English · Dark Mode
+
+| Home | Achievements | Behavior Goals | Smart Reports |
+|:---:|:---:|:---:|:---:|
+| <img src="screenshots/home_en_dark.jpg" width="195"/> | <img src="screenshots/achievements_obay_en_dark.jpg" width="195"/> | <img src="screenshots/behavior_goals_obay_en_dark.jpg" width="195"/> | <img src="screenshots/smart_reports_summary_en_dark.jpg" width="195"/> |
+
+### Arabic (RTL) & Light Mode
+
+| Content Library | Achievements | Board Selection | Home |
+|:---:|:---:|:---:|:---:|
+| <img src="screenshots/content_library_ar_light.jpg" width="195"/> | <img src="screenshots/achievements_ar_light.jpg" width="195"/> | <img src="screenshots/board_selection_ar_light.jpg" width="195"/> | <img src="screenshots/home_en_light.jpg" width="195"/> |
+
+</div>
+
+> 🖼️ **Full gallery:** browse all **28 screenshots** — every screen in Arabic & English, light & dark — in the [`screenshots/`](screenshots) folder.
+
+---
+
 ## 🏗️ Architecture
 
 ```
