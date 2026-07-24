@@ -249,7 +249,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    child.name,
+                    child.displayName,
                     style: TextStyle(
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected

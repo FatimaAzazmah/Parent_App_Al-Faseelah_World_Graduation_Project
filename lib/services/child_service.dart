@@ -109,7 +109,8 @@ class ChildService {
 
       return ServiceResult(
         success: true,
-        message: AppStrings.tr(null, 'تم إضافة ${child.name} بنجاح', '${child.name} added successfully'),
+        message: AppStrings.tr(null, 'تم إضافة ${child.displayName} بنجاح',
+            '${child.displayName} added successfully'),
         data: addedChild,
       );
     } catch (e) {
