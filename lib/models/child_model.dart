@@ -1,7 +1,12 @@
+import '../app_locale.dart';
+
 /// نموذج بيانات الطفل
 class Child {
   final String id;
   final String name;
+
+  /// الاسم بالإنجليزية (اختياري) — يُعرض عندما تكون لغة التطبيق إنجليزية.
+  final String? nameEn;
   final int age;
   final String gender;
   final String avatar;
@@ -17,6 +22,7 @@ class Child {
   Child({
     required this.id,
     required this.name,
+    this.nameEn,
     required this.age,
     required this.gender,
     required this.avatar,
@@ -26,6 +32,16 @@ class Child {
     this.parentNotes,
     this.rfidId,
   });
+
+  /// الاسم المعروض حسب لغة التطبيق:
+  /// إنجليزي إن توفّر عند اختيار الإنجليزية، وإلا الاسم الأساسي.
+  String get displayName {
+    final isEn = AppLocale.notifier.value.languageCode == 'en';
+    if (isEn && nameEn != null && nameEn!.trim().isNotEmpty) {
+      return nameEn!.trim();
+    }
+    return name;
+  }
 
   static DateTime _parseCreatedAt(dynamic raw) {
     if (raw is String) {
@@ -39,6 +55,7 @@ class Child {
     return Child(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
+      nameEn: json['nameEn'] as String?,
       age: json['age'] ?? 5,
       gender: json['gender'] ?? 'ذكر',
       avatar: json['avatar'] ?? '👦',
@@ -54,6 +71,7 @@ class Child {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'nameEn': nameEn,
       'age': age,
       'gender': gender,
       'avatar': avatar,
@@ -69,6 +87,8 @@ class Child {
   Child copyWith({
     String? id,
     String? name,
+    String? nameEn,
+    bool clearNameEn = false,
     int? age,
     String? gender,
     String? avatar,
@@ -83,6 +103,7 @@ class Child {
     return Child(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameEn: clearNameEn ? null : (nameEn ?? this.nameEn),
       age: age ?? this.age,
       gender: gender ?? this.gender,
       avatar: avatar ?? this.avatar,

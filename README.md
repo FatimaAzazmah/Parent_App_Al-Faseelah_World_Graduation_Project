@@ -59,7 +59,10 @@ This makes each side robust even when the other is offline.
   that the toy is on, using fixed service identifiers.
 - 🛡️ **Parental controls, safety & privacy** — preferred content types, session language
   (Arabic / English), full content transparency, and privacy by design (the toy has no camera).
-- 🌍 **Fully bilingual** — every screen works in both Arabic (RTL) and English.
+- 🌍 **Fully bilingual** — every screen works in both Arabic (RTL) and English, including
+  locale-aware database content and optional English child names.
+- 🌙 **Light & dark mode** — a full Material 3 dark theme, toggled from Settings and
+  persisted across sessions.
 
 ---
 
@@ -103,8 +106,9 @@ are reusable components.
 
 ```
 lib/
-├── main.dart                     # Entry point: Supabase init, theme, routes
+├── main.dart                     # Entry point: Supabase init, light/dark themes, routes
 ├── app_locale.dart               # Arabic/English locale switching
+├── app_theme.dart                # Light/dark theme mode switching (persisted)
 ├── l10n/                         # Generated localizations (ar, en)
 ├── models/                       # Data models (child, session, report, zone, ...)
 ├── services/                     # Business logic + data access
@@ -114,14 +118,12 @@ lib/
 │   ├── content_library_service.dart  # Content, favorites, preferences, achievements
 │   ├── behavior_goal_service.dart    # Behavior goals
 │   ├── board_service.dart            # Dynamic board (zones/pieces) + set_active_board RPC
-│   ├── ble_service.dart              # BLE link to the toy
-│   └── api_service.dart
+│   └── ble_service.dart              # BLE link to the toy
 ├── screens/                      # 19 UI screens
-├── widgets/                      # Reusable UI components
-└── utils/                        # Strings, constants, helpers
+└── utils/                        # Bilingual strings & theme-aware colors
 ```
 
-*~19k lines of Dart · 19 screens · 8 services · fully bilingual.*
+*~19k lines of Dart · 19 screens · 7 services · fully bilingual · light & dark themes.*
 
 ---
 

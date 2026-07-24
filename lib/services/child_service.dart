@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/app_strings.dart';
 import '../models/child_model.dart';
 import '../models/session_model.dart' as models;
 import '../models/activity_model.dart';
@@ -88,7 +89,7 @@ class ChildService {
       if (user == null) {
         return ServiceResult(
           success: false,
-          message: 'يجب تسجيل الدخول أولاً',
+          message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'),
         );
       }
 
@@ -108,14 +109,14 @@ class ChildService {
 
       return ServiceResult(
         success: true,
-        message: 'تم إضافة ${child.name} بنجاح',
+        message: AppStrings.tr(null, 'تم إضافة ${child.name} بنجاح', '${child.name} added successfully'),
         data: addedChild,
       );
     } catch (e) {
       print('[ChildService] addChild error: $e');
       return ServiceResult(
         success: false,
-        message: 'حدث خطأ: $e',
+        message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
       );
     }
   }
@@ -127,7 +128,7 @@ class ChildService {
       if (user == null) {
         return ServiceResult(
           success: false,
-          message: 'يجب تسجيل الدخول أولاً',
+          message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'),
         );
       }
 
@@ -140,14 +141,14 @@ class ChildService {
 
       return ServiceResult(
         success: true,
-        message: 'تم تحديث البيانات بنجاح',
+        message: AppStrings.tr(null, 'تم تحديث البيانات بنجاح', 'Updated successfully'),
         data: child,
       );
     } catch (e) {
       print('[ChildService] updateChild error: $e');
       return ServiceResult(
         success: false,
-        message: 'حدث خطأ: $e',
+        message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
       );
     }
   }
@@ -159,7 +160,7 @@ class ChildService {
       if (user == null) {
         return ServiceResult(
           success: false,
-          message: 'يجب تسجيل الدخول أولاً',
+          message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'),
         );
       }
 
@@ -171,13 +172,13 @@ class ChildService {
 
       return ServiceResult(
         success: true,
-        message: 'تم الحذف بنجاح',
+        message: AppStrings.tr(null, 'تم الحذف بنجاح', 'Deleted successfully'),
       );
     } catch (e) {
       print('[ChildService] deleteChild error: $e');
       return ServiceResult(
         success: false,
-        message: 'حدث خطأ: $e',
+        message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
       );
     }
   }
@@ -199,6 +200,7 @@ class ChildService {
     return Child(
       id: (row['id'] ?? '') as String,
       name: (row['name'] ?? '') as String,
+      nameEn: row['name_en'] as String?,
       age: _parseAge(row['age']),
       gender: (row['gender'] ?? 'ذكر') as String,
       avatar: (row['avatar'] ?? '👦') as String,
@@ -213,6 +215,7 @@ class ChildService {
   Map<String, dynamic> _toSupabasePayload(Child child, {required String parentId}) {
     return {
       'name': child.name,
+      'name_en': child.nameEn,
       'age': child.age,
       'gender': child.gender,
       'avatar': child.avatar,
@@ -343,8 +346,8 @@ class ChildService {
       totalActivities: 0,
       totalStars: 0,
       averageDailyMinutes: 0,
-      favoriteZone: 'غير محدد',
-      topSkill: 'التعلم',
+      favoriteZone: AppStrings.tr(null, 'غير محدد', 'Not set'),
+      topSkill: AppStrings.tr(null, 'التعلم', 'Learning'),
     );
     try {
       final user = _client.auth.currentUser;
@@ -392,7 +395,7 @@ class ChildService {
 
       final averageDailyMinutes = (weeklyMinutes / 7).round();
 
-      String favoriteZone = 'غير محدد';
+      String favoriteZone = AppStrings.tr(null, 'غير محدد', 'Not set');
       if (zonesCounts.isNotEmpty) {
         favoriteZone = zonesCounts.entries
             .reduce((a, b) => a.value > b.value ? a : b)
@@ -405,7 +408,7 @@ class ChildService {
         totalStars: totalStars,
         averageDailyMinutes: averageDailyMinutes,
         favoriteZone: favoriteZone,
-        topSkill: 'التعلم',
+        topSkill: AppStrings.tr(null, 'التعلم', 'Learning'),
       );
     } catch (e) {
       print('[ChildService] getChildStats error: $e');
@@ -420,7 +423,7 @@ class ChildService {
       if (user == null) {
         return ServiceResult(
           success: false,
-          message: 'يجب تسجيل الدخول أولاً',
+          message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'),
         );
       }
 
@@ -439,12 +442,12 @@ class ChildService {
 
       return ServiceResult(
         success: true,
-        message: 'تم حفظ الجلسة بنجاح',
+        message: AppStrings.tr(null, 'تم حفظ الجلسة بنجاح', 'Session saved successfully'),
       );
     } catch (e) {
       return ServiceResult(
         success: false,
-        message: 'حدث خطأ: $e',
+        message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
       );
     }
   }

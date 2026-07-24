@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 import '../services/auth_service.dart';
 import '../services/child_service.dart';
 import '../models/child_model.dart';
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          backgroundColor: ThemeColors.surface(context),
           selectedItemColor: Theme.of(context).colorScheme.primary,
           unselectedItemColor: Colors.grey,
           selectedLabelStyle: const TextStyle(
@@ -281,7 +282,7 @@ class _HomeContentState extends State<HomeContent> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: isConnected ? null : Colors.grey[600],
+                              color: isConnected ? null : ThemeColors.subtle(context),
                             ),
                           ),
                           Text(
@@ -291,7 +292,7 @@ class _HomeContentState extends State<HomeContent> {
                                 'اضغط للاتصال باللعبة',
                                 'Tap to connect to the game'),
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14),
+                                color: ThemeColors.subtle(context), fontSize: 14),
                           ),
                         ],
                       ),
@@ -322,7 +323,7 @@ class _HomeContentState extends State<HomeContent> {
               Icon(Icons.child_care, size: 60, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(AppStrings.welcomeAddChild(context),
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 16, color: ThemeColors.subtle(context))),
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () => Navigator.pushNamed(context, '/add-child'),
@@ -451,7 +452,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
               const SizedBox(height: 2),
               Text(subtitle,
-                style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 10, color: ThemeColors.subtle(context)),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -572,12 +573,12 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.child.name,
+                      Text(widget.child.displayName,
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       Text(
                         '${widget.child.age} ${AppStrings.tr(context, "سنوات", "years old")}',
-                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: ThemeColors.subtle(context)),
                       ),
                     ],
                   ),
@@ -644,7 +645,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
                   style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[700]),
+                      color: ThemeColors.subtle(context)),
                 ),
                 const SizedBox(height: 8),
                 ..._recentSessions.map((s) => _buildSessionRow(context, s)),
@@ -653,7 +654,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
                 Center(
                   child: Text(
                     AppStrings.noActivitiesYet(context),
-                    style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                    style: TextStyle(fontSize: 13, color: ThemeColors.faint(context)),
                   ),
                 ),
               ],
@@ -685,13 +686,13 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
             style: const TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold)),
         Text(label,
-            style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+            style: TextStyle(fontSize: 11, color: ThemeColors.subtle(context))),
       ],
     );
   }
 
   Widget _buildStatDivider() {
-    return Container(width: 1, height: 50, color: Colors.grey[200]);
+    return Container(width: 1, height: 50, color: ThemeColors.fill(context));
   }
 
   Widget _buildSessionRow(BuildContext context, models.Session session) {
@@ -748,7 +749,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
                         fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(width: 8),
                 Text(timeAgo,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                    style: TextStyle(fontSize: 11, color: ThemeColors.faint(context))),
               ],
             ),
           ],

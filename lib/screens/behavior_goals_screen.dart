@@ -5,6 +5,7 @@ import '../models/child_model.dart';
 import '../services/behavior_goal_service.dart';
 import '../services/child_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class BehaviorGoalsScreen extends StatefulWidget {
   const BehaviorGoalsScreen({super.key});
@@ -169,7 +170,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: ThemeColors.softFill(context),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: DropdownButtonHideUnderline(
@@ -183,7 +184,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                           children: [
                             Text(entry.value.avatar, style: const TextStyle(fontSize: 20)),
                             const SizedBox(width: 8),
-                            Text(entry.value.name),
+                            Text(entry.value.displayName),
                           ],
                         ),
                       );
@@ -267,7 +268,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 11, color: ThemeColors.subtle(context)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -288,12 +289,12 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                 const SizedBox(height: 16),
                 Text(
                   AppStrings.behaviorEmptyTitle(context),
-                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 18, color: ThemeColors.subtle(context)),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppStrings.behaviorEmptyHint(context),
-                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                  style: TextStyle(fontSize: 14, color: ThemeColors.faint(context)),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -381,7 +382,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                       const SizedBox(height: 4),
                       Text(
                         AppStrings.behaviorZoneLabel(context, goal.zone),
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context)),
                       ),
                     ],
                   ),
@@ -452,7 +453,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
               const SizedBox(height: 12),
               Text(
                 goal.description,
-                style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 13, color: ThemeColors.subtle(context)),
               ),
             ],
             const SizedBox(height: 12),
@@ -481,7 +482,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
               borderRadius: BorderRadius.circular(10),
               child: LinearProgressIndicator(
                 value: goal.progressPercent,
-                backgroundColor: Colors.grey[200],
+                backgroundColor: ThemeColors.fill(context),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   goal.isCompleted ? lightGreen : color,
                 ),
@@ -527,7 +528,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: ThemeColors.border(context),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -602,7 +603,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: ThemeColors.softFill(context),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: DropdownButtonHideUnderline(

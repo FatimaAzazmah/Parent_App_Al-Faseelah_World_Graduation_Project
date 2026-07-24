@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
+import '../utils/app_strings.dart';
 
 import '../models/child_model.dart';
 import '../services/child_service.dart';
@@ -27,14 +29,14 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
   // ترجمة الفئات (تطابق قيود achievements.category)
   static const Map<String, _CatInfo> _categories = {
-    'surahs': _CatInfo('السور', '📿', Color(0xFF81C784)),
-    'duas': _CatInfo('الأدعية', '🤲', Color(0xFF4DD0E1)),
-    'letters': _CatInfo('الحروف', '🔤', Color(0xFF87CEEB)),
-    'numbers': _CatInfo('الأرقام', '🔢', Color(0xFFFFB74D)),
-    'names': _CatInfo('الأسماء الحسنى', '🌟', Color(0xFFBA68C8)),
-    'behaviors': _CatInfo('السلوكيات', '💪', Color(0xFFFF8A65)),
-    'words_ar': _CatInfo('كلمات عربية', '🇵🇸', Color(0xFF90EE90)),
-    'words_en': _CatInfo('كلمات إنجليزية', '🔡', Color(0xFF9575CD)),
+    'surahs': _CatInfo('السور', 'Surahs', '📿', Color(0xFF81C784)),
+    'duas': _CatInfo('الأدعية', 'Duas', '🤲', Color(0xFF4DD0E1)),
+    'letters': _CatInfo('الحروف', 'Letters', '🔤', Color(0xFF87CEEB)),
+    'numbers': _CatInfo('الأرقام', 'Numbers', '🔢', Color(0xFFFFB74D)),
+    'names': _CatInfo("الأسماء الحسنى", "Allah's Names", '🌟', Color(0xFFBA68C8)),
+    'behaviors': _CatInfo('السلوكيات', 'Behaviors', '💪', Color(0xFFFF8A65)),
+    'words_ar': _CatInfo('كلمات عربية', 'Arabic Words', '🇵🇸', Color(0xFF90EE90)),
+    'words_en': _CatInfo('كلمات إنجليزية', 'English Words', '🔡', Color(0xFF9575CD)),
   };
 
   @override
@@ -103,7 +105,8 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('الإنجازات')),
+      appBar: AppBar(
+          title: Text(AppStrings.tr(context, 'الإنجازات', 'Achievements'))),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -121,7 +124,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       return const SizedBox.shrink();
     }
     return Container(
-      color: Colors.white,
+      color: ThemeColors.surface(context),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
@@ -140,7 +143,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                     padding: const EdgeInsets.only(left: 8),
                     child: ChoiceChip(
                       selected: selected,
-                      label: Text('${child.avatar} ${child.name}'),
+                      label: Text('${child.avatar} ${child.displayName}'),
                       onSelected: (_) async {
                         setState(() => _selectedChild = child);
                         await _load();
@@ -182,7 +185,9 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('إنجازات ${_selectedChild!.name}',
+              Text(
+                  AppStrings.tr(context, 'إنجازات ${_selectedChild!.displayName}',
+                      "${_selectedChild!.displayName}'s Achievements"),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -200,7 +205,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             child: LinearProgressIndicator(
               value: pct,
               minHeight: 10,
-              backgroundColor: Colors.white.withOpacity(0.3),
+              backgroundColor: ThemeColors.surface(context).withOpacity(0.3),
               valueColor:
                   const AlwaysStoppedAnimation<Color>(Colors.white),
             ),
@@ -212,10 +217,12 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
   Widget _buildBody() {
     if (_selectedChild == null) {
-      return _empty('اختاري طفلاً لعرض إنجازاته');
+      return _empty(AppStrings.tr(context, 'اختاري طفلاً لعرض إنجازاته',
+          'Select a child to view their achievements'));
     }
     if (_byCategory.isEmpty) {
-      return _empty('لا توجد عناصر قابلة للتتبع بعد');
+      return _empty(AppStrings.tr(context, 'لا توجد عناصر قابلة للتتبع بعد',
+          'No trackable items yet'));
     }
 
     // رتّب الفئات حسب ترتيب _categories المعروف
@@ -238,7 +245,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
   Widget _buildCategoryCard(String cat, List<_Trackable> items) {
     final info = _categories[cat] ??
-        const _CatInfo('أخرى', '📌', Color(0xFF90A4AE));
+        const _CatInfo('أخرى', 'Other', '📌', Color(0xFF90A4AE));
     final doneCount =
         items.where((it) => _achieved.containsKey(it.key)).length;
 
@@ -252,9 +259,11 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           backgroundColor: info.color.withOpacity(0.2),
           child: Text(info.emoji, style: const TextStyle(fontSize: 20)),
         ),
-        title: Text(info.label,
+        title: Text(info.label(context),
             style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('$doneCount / ${items.length} مكتمل'),
+        subtitle: Text(AppStrings.tr(context,
+            '$doneCount / ${items.length} مكتمل',
+            '$doneCount / ${items.length} completed')),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
@@ -278,7 +287,9 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             ),
             title: Text(it.label),
             subtitle: (done && date != null)
-                ? Text('تحقّق في ${_fmtDate(date)}',
+                ? Text(
+                    AppStrings.tr(context, 'تحقّق في ${_fmtDate(date)}',
+                        'Achieved on ${_fmtDate(date)}'),
                     style: const TextStyle(fontSize: 11))
                 : null,
           );
@@ -299,7 +310,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           const SizedBox(height: 12),
           Text(msg,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 16, color: ThemeColors.subtle(context))),
         ],
       ),
     );
@@ -313,8 +324,12 @@ class _Trackable {
 }
 
 class _CatInfo {
-  final String label;
+  final String labelAr;
+  final String labelEn;
   final String emoji;
   final Color color;
-  const _CatInfo(this.label, this.emoji, this.color);
+  const _CatInfo(this.labelAr, this.labelEn, this.emoji, this.color);
+
+  String label(BuildContext context) =>
+      AppStrings.tr(context, labelAr, labelEn);
 }

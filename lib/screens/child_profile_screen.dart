@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 import '../services/child_service.dart';
 import '../models/child_model.dart';
 
@@ -84,7 +85,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
   Map<String, dynamic> _childToMap(Child child) {
     return {
       'id': child.id,
-      'name': child.name,
+      'name': child.displayName,
       'age': child.age,
       'avatar': child.avatar,
       'gender': child.gender,
@@ -253,7 +254,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected
                           ? Theme.of(context).colorScheme.primary
-                          : Colors.grey[700],
+                          : ThemeColors.subtle(context),
                     ),
                   ),
                   Container(
@@ -327,7 +328,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               '${child['age']} ${AppStrings.yearsUnit(context)} • ${AppStrings.genderLabelFromStored(context, child['gender'].toString())}',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[600],
+                color: ThemeColors.subtle(context),
               ),
             ),
             const SizedBox(height: 12),
@@ -360,7 +361,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                       fontWeight: FontWeight.bold,
                       color: (child['rfidId'] as String?)?.isNotEmpty == true
                           ? const Color(0xFFBA68C8)
-                          : Colors.grey[500],
+                          : ThemeColors.faint(context),
                     ),
                   ),
                 ],
@@ -428,7 +429,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[600],
+            color: ThemeColors.subtle(context),
           ),
         ),
       ],
@@ -500,7 +501,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
         const SizedBox(height: 8),
         Text(
           AppStrings.parentNotesSectionHelper(context),
-          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 13, color: ThemeColors.subtle(context)),
         ),
         const SizedBox(height: 12),
         TextField(
@@ -582,7 +583,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: LinearProgressIndicator(
                           value: entry.value / 100,
-                          backgroundColor: Colors.grey[200],
+                          backgroundColor: ThemeColors.fill(context),
                           valueColor: AlwaysStoppedAnimation<Color>(
                             skillColors[entry.key] ?? Colors.blue,
                           ),
@@ -728,7 +729,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                AppStrings.deleteChildSuccess(context, childToDelete.name)),
+                AppStrings.deleteChildSuccess(context, childToDelete.displayName)),
             backgroundColor: Colors.green,
           ),
         );
@@ -750,7 +751,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
   void _showDeleteConfirmDialog(BuildContext context) {
     if (_children.isEmpty || selectedChildIndex >= _children.length) return;
     
-    final childName = _children[selectedChildIndex].name;
+    final childName = _children[selectedChildIndex].displayName;
     
     showDialog(
       context: context,
@@ -779,6 +780,8 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
 
   void _showEditChildDialog(BuildContext context, Child currentChild) {
     final nameController = TextEditingController(text: currentChild.name);
+    final nameEnController =
+        TextEditingController(text: currentChild.nameEn ?? '');
     final ageController =
         TextEditingController(text: currentChild.age.toString());
     final rfidController =
@@ -804,7 +807,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: ThemeColors.border(context),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -822,6 +825,19 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 decoration: InputDecoration(
                   labelText: AppStrings.childNameLabel(context),
                   prefixIcon: const Icon(Icons.person),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: nameEnController,
+                textDirection: TextDirection.ltr,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  labelText: AppStrings.tr(context, 'الاسم بالإنجليزية',
+                      'Name in English'),
+                  hintText: AppStrings.tr(
+                      context, 'اختياري', 'Optional'),
+                  prefixIcon: const Icon(Icons.translate),
                 ),
               ),
               const SizedBox(height: 16),
@@ -859,6 +875,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         final name = nameController.text.trim();
+                        final nameEnText = nameEnController.text.trim();
                         final ageParsed =
                             int.tryParse(ageController.text.trim()) ??
                                 currentChild.age;
@@ -866,6 +883,8 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                         final updated = currentChild.copyWith(
                           name:
                               name.isEmpty ? currentChild.name : name,
+                          nameEn: nameEnText.isEmpty ? null : nameEnText,
+                          clearNameEn: nameEnText.isEmpty,
                           age: ageParsed,
                           rfidId: rfidText.isEmpty ? null : rfidText,
                           clearRfidId: rfidText.isEmpty,

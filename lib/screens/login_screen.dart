@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -182,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
             AppStrings.loginParentAppSubtitle(context),
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: ThemeColors.subtle(context),
             ),
           ),
         ],
@@ -206,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppStrings.loginSubtitle(context),
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: ThemeColors.subtle(context),
           ),
         ),
       ],
@@ -332,15 +333,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildDivider() {
     return Row(
       children: [
-        Expanded(child: Divider(color: Colors.grey[300])),
+        Expanded(child: Divider(color: ThemeColors.border(context))),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             AppStrings.orDivider(context),
-            style: TextStyle(color: Colors.grey[500]),
+            style: TextStyle(color: ThemeColors.faint(context)),
           ),
         ),
-        Expanded(child: Divider(color: Colors.grey[300])),
+        Expanded(child: Divider(color: ThemeColors.border(context))),
       ],
     );
   }
@@ -362,7 +363,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ThemeColors.surface(context),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: const Icon(Icons.g_mobiledata, size: 24, color: Colors.red),
@@ -402,7 +403,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Text(
           AppStrings.noAccountPrompt(context),
-          style: TextStyle(color: Colors.grey[600]),
+          style: TextStyle(color: ThemeColors.subtle(context)),
         ),
         TextButton(
           onPressed: () {

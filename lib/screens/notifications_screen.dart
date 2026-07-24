@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 import '../services/child_service.dart';
-import '../models/child_model.dart';
 import '../models/session_model.dart' as models;
 
 class NotificationsScreen extends StatefulWidget {
@@ -49,11 +49,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         // إشعار لكل جلسة
         notifs.add(_AppNotification(
           id: 'session_${session.id}',
-          childName: child.name,
+          childName: child.displayName,
           childAvatar: child.avatar,
           icon: Icons.play_circle,
           color: const Color(0xFF87CEEB),
-          title: child.name,
+          title: child.displayName,
           body: _sessionSummary(session),
           time: session.startTime,
           isRead: _isOlderThan(session.startTime, hours: 1),
@@ -66,12 +66,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         if (session.starsEarned >= 3) {
           notifs.add(_AppNotification(
             id: 'stars_${session.id}',
-            childName: child.name,
+            childName: child.displayName,
             childAvatar: child.avatar,
             icon: Icons.star,
             color: const Color(0xFFFFB74D),
-            title: child.name,
-            body: _starsMessage(child.name, session.starsEarned),
+            title: child.displayName,
+            body: _starsMessage(child.displayName, session.starsEarned),
             time: session.startTime,
             isRead: _isOlderThan(session.startTime, hours: 2),
             type: _NotifType.achievement,
@@ -199,7 +199,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: ThemeColors.fill(context),
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.notifications_off,
@@ -211,14 +211,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[600]),
+                color: ThemeColors.subtle(context)),
           ),
           const SizedBox(height: 8),
           Text(
             AppStrings.tr(context,
                 'لا توجد جلسات في آخر 7 أيام',
                 'No sessions in the last 7 days'),
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            style: TextStyle(fontSize: 14, color: ThemeColors.faint(context)),
           ),
         ],
       ),
@@ -319,13 +319,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     const SizedBox(height: 4),
                     Text(n.body,
                         style: TextStyle(
-                            fontSize: 13, color: Colors.grey[600]),
+                            fontSize: 13, color: ThemeColors.subtle(context)),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 6),
                     Text(_timeAgo(n.time),
                         style: TextStyle(
-                            fontSize: 11, color: Colors.grey[500])),
+                            fontSize: 11, color: ThemeColors.faint(context))),
                   ],
                 ),
               ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/session_model.dart' as models;
 import '../services/child_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 /// شاشة تفاصيل نشاط الطفل
 class ChildActivityDetailScreen extends StatefulWidget {
@@ -156,7 +157,7 @@ class _ChildActivityDetailScreenState extends State<ChildActivityDetailScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white24,
+                  color: ThemeColors.surface(context),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(

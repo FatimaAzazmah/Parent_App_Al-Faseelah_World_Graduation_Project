@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class ParentalControlsScreen extends StatefulWidget {
   const ParentalControlsScreen({super. key});
@@ -156,7 +157,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                         (_dailyTimeLimit / 60).toStringAsFixed(1),
                       ),
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: ThemeColors.subtle(context),
                         fontSize: 14,
                       ),
                     ),
@@ -220,13 +221,13 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppStrings.parentalSlider15m(context),
-                      style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                      style: TextStyle(color: ThemeColors.faint(context), fontSize: 12)),
                   Text(AppStrings.parentalSlider1h(context),
-                      style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                      style: TextStyle(color: ThemeColors.faint(context), fontSize: 12)),
                   Text(AppStrings.parentalSlider2h(context),
-                      style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                      style: TextStyle(color: ThemeColors.faint(context), fontSize: 12)),
                   Text(AppStrings.parentalSlider3h(context),
-                      style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                      style: TextStyle(color: ThemeColors.faint(context), fontSize: 12)),
                 ],
               ),
             ),
@@ -236,7 +237,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: ThemeColors.softFill(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               child:  SwitchListTile(
@@ -247,7 +248,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                 ),
                 subtitle: Text(
                   AppStrings.parentalWeekendExtraSubtitle(context),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  style: TextStyle(color: ThemeColors.subtle(context), fontSize: 12),
                 ),
                 value: _weekendExtraTime,
                 activeColor: const Color(0xFF87CEEB),
@@ -334,7 +335,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                       decoration: BoxDecoration(
                         color: _activeDays[index]
                             ? const Color(0xFF90EE90)
-                            : Colors.grey[200],
+                            : ThemeColors.fill(context),
                         shape: BoxShape.circle,
                         boxShadow: _activeDays[index]
                             ? [
@@ -350,7 +351,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                         child: Text(
                           AppStrings.parentalWeekDayLetters(context)[index],
                           style: TextStyle(
-                            color: _activeDays[index] ? Colors.white : Colors.grey[600],
+                            color: _activeDays[index] ? Colors.white : ThemeColors.subtle(context),
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -368,7 +369,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                   context,
                   _activeDays.where((d) => d).length,
                 ),
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                style: TextStyle(color: ThemeColors.faint(context), fontSize: 12),
               ),
             ),
           ],
@@ -388,7 +389,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+          style: TextStyle(color: ThemeColors.subtle(context), fontSize: 12),
         ),
         const SizedBox(height:  8),
         InkWell(
@@ -415,9 +416,9 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
           child: Container(
             padding: const EdgeInsets. all(14),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: ThemeColors.softFill(context),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[300]!),
+              border: Border.all(color: ThemeColors.border(context)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -522,7 +523,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                 decoration: BoxDecoration(
                   color: entry.value
                       ? const Color(0xFFBA68C8).withOpacity(0.05)
-                      : Colors.grey[50],
+                      : ThemeColors.softFill(context),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child:  CheckboxListTile(
@@ -632,7 +633,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
         decoration: BoxDecoration(
           color: value
               ? const Color(0xFF90EE90).withOpacity(0.15)
-              : Colors.grey[200],
+              : ThemeColors.fill(context),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(

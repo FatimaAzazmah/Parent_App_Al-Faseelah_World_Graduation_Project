@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -112,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               AppStrings.registerWelcomeBody(
                   dialogContext, _nameController.text),
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600]),
+              style: TextStyle(color: ThemeColors.subtle(context)),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -187,7 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       decoration: BoxDecoration(
                         color: isActive
                             ? Theme.of(context).colorScheme.primary
-                            : Colors.grey[300],
+                            : ThemeColors.border(context),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -196,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : Text(
                                 '${index + 1}',
                                 style: TextStyle(
-                                  color: isActive ? Colors.white : Colors.grey[600],
+                                  color: isActive ? Colors.white : ThemeColors.subtle(context),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -213,7 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontSize: 12,
                         color: isActive
                             ? Theme.of(context).colorScheme.primary
-                            : Colors.grey[500],
+                            : ThemeColors.faint(context),
                       ),
                     ),
                   ],
@@ -225,7 +226,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 2,
                     color: index < _currentStep
                         ? Theme.of(context).colorScheme.primary
-                        : Colors.grey[300],
+                        : ThemeColors.border(context),
                   ),
                 ),
             ],
@@ -259,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 8),
         Text(
           AppStrings.regPersonalSubtitle(context),
-          style: TextStyle(color: Colors.grey[600]),
+          style: TextStyle(color: ThemeColors.subtle(context)),
         ),
         const SizedBox(height: 24),
         TextFormField(
@@ -324,7 +325,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 8),
         Text(
           AppStrings.regSecuritySubtitle(context),
-          style: TextStyle(color: Colors.grey[600]),
+          style: TextStyle(color: ThemeColors.subtle(context)),
         ),
         const SizedBox(height: 24),
         TextFormField(
@@ -428,7 +429,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Text(
               AppStrings.passwordStrengthLabel(context),
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context)),
             ),
             Text(
               strengthText,
@@ -445,7 +446,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
             value: strength,
-            backgroundColor: Colors.grey[200],
+            backgroundColor: ThemeColors.fill(context),
             valueColor: AlwaysStoppedAnimation<Color>(strengthColor),
             minHeight: 6,
           ),
@@ -503,7 +504,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 8),
         Text(
           AppStrings.regConfirmSubtitle(context),
-          style: TextStyle(color: Colors.grey[600]),
+          style: TextStyle(color: ThemeColors.subtle(context)),
         ),
         const SizedBox(height: 24),
         Card(
@@ -585,7 +586,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
           const SizedBox(width: 12),
-          Text(label, style: TextStyle(color: Colors.grey[600])),
+          Text(label, style: TextStyle(color: ThemeColors.subtle(context))),
           const Spacer(),
           Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
         ],
@@ -653,7 +654,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Text(
           AppStrings.haveAccountPrompt(context),
-          style: TextStyle(color: Colors.grey[600]),
+          style: TextStyle(color: ThemeColors.subtle(context)),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),

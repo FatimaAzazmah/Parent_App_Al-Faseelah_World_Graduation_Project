@@ -21,7 +21,7 @@ class ContentLibraryService {
     try {
       var query = _client
           .from('content')
-          .select('*, zones(name_ar), pieces(name_ar)')
+          .select('*, zones(name_ar,name_en), pieces(name_ar,name_en)')
           .eq('is_active', true);
 
       if (type != null && type.isNotEmpty) {
@@ -80,7 +80,7 @@ class ContentLibraryService {
       // 2) جلب صفوف المحتوى المطابقة مع أسماء المنطقة/القطعة
       final rows = await _client
           .from('content')
-          .select('*, zones(name_ar), pieces(name_ar)')
+          .select('*, zones(name_ar,name_en), pieces(name_ar,name_en)')
           .inFilter('id', savedIds.toList());
 
       return (rows as List<dynamic>)

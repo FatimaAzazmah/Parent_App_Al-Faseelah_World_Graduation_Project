@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
+import '../utils/app_strings.dart';
 
 import '../models/zone_model.dart';
 import '../services/board_service.dart';
@@ -72,7 +74,9 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('✅ البورد المفعّل الآن: ${zone.nameAr}'),
+          content: Text(AppStrings.tr(context,
+              '✅ البورد المفعّل الآن: ${zone.name}',
+              '✅ Active board now: ${zone.name}')),
           backgroundColor: const Color(0xFF81C784),
           behavior: SnackBarBehavior.floating,
         ),
@@ -93,7 +97,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('اختيار البورد'),
+        title: Text(AppStrings.tr(context, 'اختيار البورد', 'Board Selection')),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -113,8 +117,8 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
         const SizedBox(height: 16),
         Center(
           child: Text(
-            'لا توجد بوردات متغيرة',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            AppStrings.tr(context, 'لا توجد بوردات متغيرة', 'No dynamic boards'),
+            style: TextStyle(fontSize: 18, color: ThemeColors.subtle(context)),
           ),
         ),
       ],
@@ -151,11 +155,15 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
         children: [
           const Icon(Icons.info_outline, color: Colors.white, size: 28),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Text(
-              'اختاري البورد المحطوط حالياً على الجهاز. الفسيلة والجهاز '
-              'سيتعاملان مع القطع الخاصة به.',
-              style: TextStyle(
+              AppStrings.tr(
+                  context,
+                  'اختاري البورد المحطوط حالياً على الجهاز. الفسيلة والجهاز '
+                  'سيتعاملان مع القطع الخاصة به.',
+                  'Pick the board currently mounted on the toy. Faseelah and '
+                  'the device will play with its pieces.'),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 13,
                 height: 1.5,
@@ -208,7 +216,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          zone.nameAr,
+                          zone.name,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -216,10 +224,11 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${zone.pieces.length} قطعة',
+                          AppStrings.tr(context, '${zone.pieces.length} قطعة',
+                              '${zone.pieces.length} pieces'),
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey[600],
+                            color: ThemeColors.subtle(context),
                           ),
                         ),
                       ],
@@ -233,11 +242,12 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                 const Divider(height: 1),
                 const SizedBox(height: 12),
                 Text(
-                  'القطع على هذا البورد:',
+                  AppStrings.tr(context, 'القطع على هذا البورد:',
+                      'Pieces on this board:'),
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
+                    color: ThemeColors.subtle(context),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -253,7 +263,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              p.nameAr,
+                              p.name,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: color.withOpacity(0.9),
@@ -286,14 +296,14 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
           color: const Color(0xFF81C784),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 16),
-            SizedBox(width: 4),
+            const Icon(Icons.check_circle, color: Colors.white, size: 16),
+            const SizedBox(width: 4),
             Text(
-              'مفعّل',
-              style: TextStyle(
+              AppStrings.tr(context, 'مفعّل', 'Active'),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -311,9 +321,9 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Text(
-        'تفعيل',
+        AppStrings.tr(context, 'تفعيل', 'Activate'),
         style: TextStyle(
-          color: Colors.grey[600],
+          color: ThemeColors.subtle(context),
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),

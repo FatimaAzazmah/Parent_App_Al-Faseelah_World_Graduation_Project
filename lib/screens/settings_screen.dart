@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../app_locale.dart';
+import '../app_theme.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 import '../services/auth_service.dart';
 import '../services/child_service.dart';
 import '../models/child_model.dart';
-import '../services/ble_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _notificationsEnabled = true;
   bool _soundEnabled = true;
-  bool _darkModeEnabled = false;
+  bool _darkModeEnabled = AppTheme.isDark;
   bool _autoUpdateEnabled = true;
   bool _analyticsEnabled = true;
   double _dailyTimeLimit = 45;
@@ -129,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 4),
                   Text(
                     _userData?.email ?? '',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    style: TextStyle(color: ThemeColors.subtle(context), fontSize: 14),
                   ),
                   const SizedBox(height: 4),
                   Container(
@@ -200,7 +201,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 return Column(
                   children: [
                     _buildChildTile(
-                      child.name,
+                      child.displayName,
                       AppStrings.yearsOldShort(context, child.age),
                       child.avatar,
                       false, // Will be true when RFID identifies the child
@@ -276,6 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             setState(() {
               _darkModeEnabled = value;
             });
+            AppTheme.setDark(value);
           },
         ),
         _buildSwitchTile(
@@ -504,7 +506,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Text(
-          subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+          subtitle, style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context))),
       trailing: Switch(
         value: value,
         onChanged: onChanged,
@@ -554,11 +556,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       subtitle: Text(
         subtitle,
         style: TextStyle(
-            fontSize: 12, color: enabled ? Colors.grey[600] : Colors.grey[400]),
+            fontSize: 12, color: enabled ? ThemeColors.subtle(context) : Colors.grey[400]),
       ),
       trailing: Icon(
         Icons.chevron_left,
-        color: enabled ? Colors.grey : Colors.grey[300],
+        color: enabled ? Colors.grey : ThemeColors.border(context),
       ),
       onTap: enabled ? onTap : null,
     );
@@ -707,7 +709,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 4),
           Text(
             AppStrings.appVersion(context),
-            style: TextStyle(color: Colors.grey[500], fontSize: 14),
+            style: TextStyle(color: ThemeColors.faint(context), fontSize: 14),
           ),
           const SizedBox(height: 8),
           Text(
@@ -756,7 +758,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -912,7 +914,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: ThemeColors.border(context),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1100,7 +1102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1213,7 +1215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1225,7 +1227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 8),
                   Text(
                     AppStrings.contentFilterSheetSubtitle(context),
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(color: ThemeColors.subtle(context)),
                   ),
                   const SizedBox(height: 20),
                   ...contentFilters.entries.map((entry) {
@@ -1291,7 +1293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1325,7 +1327,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                                  color: ThemeColors.softFill(context),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
@@ -1364,7 +1366,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                                  color: ThemeColors.softFill(context),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
@@ -1405,7 +1407,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 .of(context)
                                 .colorScheme
                                 .primary
-                                : Colors.grey[200],
+                                : ThemeColors.fill(context),
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -1414,7 +1416,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               style: TextStyle(
                                 color: selectedDays[index]
                                     ? Colors.white
-                                    : Colors.grey[600],
+                                    : ThemeColors.subtle(context),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -1476,7 +1478,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: ThemeColors.border(context),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1714,7 +1716,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1743,7 +1745,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Text(
                                   faqs[index]['answer']!,
                                   style: TextStyle(
-                                      color: Colors.grey[700], height: 1.5),
+                                      color: ThemeColors.subtle(context), height: 1.5),
                                 ),
                               ),
                             ],
@@ -1789,7 +1791,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: ThemeColors.border(context),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1882,7 +1884,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         : rating <= 4
                         ? AppStrings.rateThanks(context)
                         : AppStrings.rateGreat(context),
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(color: ThemeColors.subtle(context)),
                   ),
                 ],
               ),
@@ -1934,7 +1936,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1997,7 +1999,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Text(
                                   AppStrings.policyUpdatedLine(context),
                                   style: TextStyle(
-                                    color: Colors.grey[500],
+                                    color: ThemeColors.faint(context),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -2046,7 +2048,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             content,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[700],
+              color: ThemeColors.subtle(context),
               height: 1.6,
             ),
           ),

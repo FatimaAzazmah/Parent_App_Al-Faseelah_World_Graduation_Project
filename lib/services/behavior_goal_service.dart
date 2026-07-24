@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/app_strings.dart';
 import '../models/behavior_goal_model.dart';
 import 'child_service.dart';
 
@@ -40,7 +41,7 @@ class BehaviorGoalService {
     try {
       final uid = _supabaseUserId;
       if (uid == null) {
-        return ServiceResult(success: false, message: 'يجب تسجيل الدخول أولاً');
+        return ServiceResult(success: false, message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'));
       }
 
       final insert = goal.copyWith(parentId: uid).toSupabaseInsert(uid);
@@ -52,11 +53,11 @@ class BehaviorGoalService {
 
       return ServiceResult(
         success: true,
-        message: 'تم إضافة الهدف بنجاح',
+        message: AppStrings.tr(null, 'تم إضافة الهدف بنجاح', 'Goal added successfully'),
         data: BehaviorGoal.fromSupabase(Map<String, dynamic>.from(row)),
       );
     } catch (e) {
-      return ServiceResult(success: false, message: 'حدث خطأ: $e');
+      return ServiceResult(success: false, message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'));
     }
   }
 
@@ -64,7 +65,7 @@ class BehaviorGoalService {
     try {
       final uid = _supabaseUserId;
       if (uid == null) {
-        return ServiceResult(success: false, message: 'يجب تسجيل الدخول أولاً');
+        return ServiceResult(success: false, message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'));
       }
 
       final existing = await _client
@@ -75,7 +76,7 @@ class BehaviorGoalService {
           .maybeSingle();
 
       if (existing == null) {
-        return ServiceResult(success: false, message: 'الهدف غير موجود');
+        return ServiceResult(success: false, message: AppStrings.tr(null, 'الهدف غير موجود', 'Goal not found'));
       }
 
       final data = Map<String, dynamic>.from(existing);
@@ -92,10 +93,10 @@ class BehaviorGoalService {
 
       return ServiceResult(
         success: true,
-        message: isCompleted ? 'تم إكمال الهدف!' : 'تم تحديث التقدم',
+        message: isCompleted ? AppStrings.tr(null, 'تم إكمال الهدف!', 'Goal completed!') : AppStrings.tr(null, 'تم تحديث التقدم', 'Progress updated'),
       );
     } catch (e) {
-      return ServiceResult(success: false, message: 'حدث خطأ: $e');
+      return ServiceResult(success: false, message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'));
     }
   }
 
@@ -103,7 +104,7 @@ class BehaviorGoalService {
     try {
       final uid = _supabaseUserId;
       if (uid == null) {
-        return ServiceResult(success: false, message: 'يجب تسجيل الدخول أولاً');
+        return ServiceResult(success: false, message: AppStrings.tr(null, 'يجب تسجيل الدخول أولاً', 'Please sign in first'));
       }
 
       await _client
@@ -112,9 +113,9 @@ class BehaviorGoalService {
           .eq('id', goalId)
           .eq('parent_id', uid);
 
-      return ServiceResult(success: true, message: 'تم حذف الهدف');
+      return ServiceResult(success: true, message: AppStrings.tr(null, 'تم حذف الهدف', 'Goal deleted'));
     } catch (e) {
-      return ServiceResult(success: false, message: 'حدث خطأ: $e');
+      return ServiceResult(success: false, message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'));
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 import '../services/child_service.dart';
 import '../models/child_model.dart';
 import '../services/ble_service.dart';
@@ -246,7 +247,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
           .select()
           .single();
 
-      _showSnack('Session for ${child.name} saved ✅', const Color(0xFF90EE90));
+      _showSnack('Session for ${child.displayName} saved ✅', const Color(0xFF90EE90));
 
       // 2. Send confirmation to Raspberry Pi via BLE
       if (_ble.connected) {
@@ -457,7 +458,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
           const SizedBox(width: 12),
-          Text(label, style: TextStyle(color: Colors.grey[600])),
+          Text(label, style: TextStyle(color: ThemeColors.subtle(context))),
           const Spacer(),
           Text(value,
               style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -491,7 +492,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
             ]),
             const SizedBox(height: 4),
             Text('App → BLE → Raspberry Pi → Supabase',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context))),
             const SizedBox(height: 16),
 
             // Child selector
@@ -517,7 +518,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 padding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: ThemeColors.softFill(context),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                       color: const Color(0xFF87CEEB).withOpacity(0.5)),
@@ -528,7 +529,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                   const SizedBox(width: 8),
                   Text(AppStrings.tr(context, 'الطفل:', 'Child:'),
                       style: TextStyle(
-                          fontSize: 13, color: Colors.grey[600])),
+                          fontSize: 13, color: ThemeColors.subtle(context))),
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonHideUnderline(
@@ -548,14 +549,14 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                               Text(c.avatar,
                                   style: const TextStyle(fontSize: 20)),
                               const SizedBox(width: 8),
-                              Text(c.name,
+                              Text(c.displayName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold)),
                               const SizedBox(width: 4),
                               Text('(${c.age})',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey[600])),
+                                      color: ThemeColors.subtle(context))),
                             ]),
                           );
                         }),
@@ -574,7 +575,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 onPressed: _children.isEmpty ? null : _sendTestSession,
                 icon: const Icon(Icons.play_circle),
                 label: Text(_selectedChild != null
-                    ? 'Send test session — ${_selectedChild!.name}'
+                    ? 'Send test session — ${_selectedChild!.displayName}'
                     : 'Send test session'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF90EE90),
@@ -617,7 +618,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                     '4. Check Supabase Dashboard to verify',
                   ].map((t) => Text(t,
                       style: TextStyle(
-                          fontSize: 12, color: Colors.grey[700]))),
+                          fontSize: 12, color: ThemeColors.subtle(context)))),
                 ],
               ),
             ),
@@ -668,11 +669,11 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                   const SizedBox(height: 16),
                   Text(AppStrings.connectionNoDevices(context),
                       style: TextStyle(
-                          fontSize: 16, color: Colors.grey[600])),
+                          fontSize: 16, color: ThemeColors.subtle(context))),
                   const SizedBox(height: 8),
                   Text('Make sure ble_server.py is running on Raspberry Pi',
                       style: TextStyle(
-                          fontSize: 14, color: Colors.grey[500]),
+                          fontSize: 14, color: ThemeColors.faint(context)),
                       textAlign: TextAlign.center),
                 ]),
               ),
@@ -713,7 +714,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                               fontWeight: FontWeight.bold)),
                       subtitle: Text('RSSI: ${result.rssi} dBm',
                           style: TextStyle(
-                              fontSize: 12, color: Colors.grey[600])),
+                              fontSize: 12, color: ThemeColors.subtle(context))),
                       trailing: isCurrent
                           ? Container(
                         padding: const EdgeInsets.symmetric(
@@ -825,7 +826,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 const SizedBox(height: 4),
                 Text(description,
                     style: TextStyle(
-                        fontSize: 13, color: Colors.grey[600])),
+                        fontSize: 13, color: ThemeColors.subtle(context))),
               ],
             ),
           ),

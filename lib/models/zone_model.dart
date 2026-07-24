@@ -1,3 +1,7 @@
+import '../app_locale.dart';
+
+bool get _isEn => AppLocale.notifier.value.languageCode == 'en';
+
 /// يمثّل منطقة (بورد) من جدول zones في Supabase.
 class Zone {
   final int id;
@@ -53,6 +57,10 @@ class Zone {
     );
   }
 
+  /// اسم المنطقة حسب لغة التطبيق.
+  String get name =>
+      _isEn ? (nameEn.isNotEmpty ? nameEn : nameAr) : nameAr;
+
   /// أهداف المنطقة كقائمة (goals_ar مفصولة بفواصل عربية).
   List<String> get goalsList => goalsAr
       .split(RegExp(r'[،,]'))
@@ -78,6 +86,10 @@ class ZonePiece {
     required this.nameEn,
     this.sensorPin,
   });
+
+  /// اسم القطعة حسب لغة التطبيق.
+  String get name =>
+      _isEn ? (nameEn.isNotEmpty ? nameEn : nameAr) : nameAr;
 
   factory ZonePiece.fromSupabase(Map<String, dynamic> row) {
     return ZonePiece(

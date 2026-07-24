@@ -3,6 +3,7 @@ import '../services/child_service.dart';
 import '../models/child_model.dart';
 import '../models/session_model.dart' as models;
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -357,7 +358,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: ThemeColors.softFill(context),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: DropdownButtonHideUnderline(
@@ -371,7 +372,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               children: [
                                 Text(entry.value.avatar, style: const TextStyle(fontSize: 20)),
                                 const SizedBox(width: 8),
-                                Text(entry.value.name),
+                                Text(entry.value.displayName),
                               ],
                             ),
                           );
@@ -401,7 +402,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       selected: isSelected,
                       selectedColor: Theme.of(context).colorScheme.primary,
                       labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : Colors.grey[700],
+                        color: isSelected ? Colors.white : ThemeColors.subtle(context),
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                       onSelected: (selected) {
@@ -480,7 +481,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -502,7 +503,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Icon(Icons.bar_chart, size: 48, color: Colors.grey[400]),
                 const SizedBox(height: 12),
                 Text(AppStrings.progressNoUsageYet(context),
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(color: ThemeColors.subtle(context))),
               ],
             ),
           ),
@@ -567,7 +568,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         '${day['minutes']}',
                         style: TextStyle(
                           fontSize: 11,
-                          color: Colors.grey[600],
+                          color: ThemeColors.subtle(context),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -593,7 +594,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           context,
                           day['dayIndex'] as int,
                         ),
-                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 11, color: ThemeColors.subtle(context)),
                       ),
                     ],
                   );
@@ -626,7 +627,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Icon(Icons.school, size: 48, color: Colors.grey[400]),
                 const SizedBox(height: 12),
                 Text(AppStrings.progressNoSkillsYet(context),
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(color: ThemeColors.subtle(context))),
               ],
             ),
           ),
@@ -678,7 +679,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           decoration: BoxDecoration(
                             color: skill['trend'] == 'up'
                                 ? const Color(0xFF90EE90).withOpacity(0.15)
-                                : Colors.grey[200],
+                                : ThemeColors.fill(context),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -691,7 +692,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                                 size: 14,
                                 color: skill['trend'] == 'up'
                                     ? const Color(0xFF2E7D32)
-                                    : Colors.grey[600],
+                                    : ThemeColors.subtle(context),
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -701,7 +702,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                                   fontSize: 11,
                                   color: skill['trend'] == 'up'
                                       ? const Color(0xFF2E7D32)
-                                      : Colors.grey[600],
+                                      : ThemeColors.subtle(context),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -723,7 +724,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
                         value: skill['progress'] / 100,
-                        backgroundColor: Colors.grey[200],
+                        backgroundColor: ThemeColors.fill(context),
                         valueColor: AlwaysStoppedAnimation<Color>(color),
                         minHeight: 8,
                       ),
@@ -769,7 +770,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     Icon(Icons.emoji_events, size: 48, color: Colors.grey[400]),
                     const SizedBox(height: 12),
                     Text(AppStrings.progressNoAchievementsYet(context),
-                        style: TextStyle(color: Colors.grey[600])),
+                        style: TextStyle(color: ThemeColors.subtle(context))),
                   ],
                 ),
               ),
@@ -820,7 +821,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           achievement['date'],
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.grey[500],
+                            color: ThemeColors.faint(context),
                           ),
                         ),
                       ],
@@ -848,7 +849,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Icon(Icons.history, size: 48, color: Colors.grey[400]),
                 const SizedBox(height: 12),
                 Text(AppStrings.progressNoSessionsYet(context),
-                    style: TextStyle(color: Colors.grey[600])),
+                    style: TextStyle(color: ThemeColors.subtle(context))),
               ],
             ),
           ),
@@ -884,9 +885,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: ThemeColors.softFill(context),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(color: ThemeColors.fill(context)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -910,7 +911,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               const SizedBox(width: 4),
                               Text(
                                 session['duration'],
-                                style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                                style: TextStyle(color: ThemeColors.subtle(context), fontSize: 13),
                               ),
                             ],
                           ),
@@ -969,7 +970,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         const SizedBox(width: 4),
         Text(
           text,
-          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 11, color: ThemeColors.subtle(context)),
         ),
       ],
     );
@@ -977,7 +978,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   Widget _buildAIRecommendations() {
     final childName =
-        _selectedChild?.name ?? AppStrings.yourChildPlaceholder(context);
+        _selectedChild?.displayName ?? AppStrings.yourChildPlaceholder(context);
 
     return Card(
       child: Container(
@@ -1068,7 +1069,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               const SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.4),
+                style: TextStyle(fontSize: 13, color: ThemeColors.subtle(context), height: 1.4),
               ),
             ],
           ),
@@ -1093,7 +1094,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: ThemeColors.border(context),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1220,7 +1221,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: ThemeColors.border(context),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1257,7 +1258,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             subtitle: Text(achievement['description']),
                             trailing: Text(
                               achievement['date'],
-                              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                              style: TextStyle(fontSize: 12, color: ThemeColors.faint(context)),
                             ),
                           ),
                         );

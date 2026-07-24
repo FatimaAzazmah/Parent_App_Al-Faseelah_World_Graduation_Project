@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -157,7 +158,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           AppStrings.forgotPasswordDescription(context),
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: ThemeColors.subtle(context),
             height: 1.5,
           ),
           textAlign: TextAlign.center,
@@ -255,7 +256,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           AppStrings.emailSentSubtitle(context),
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: ThemeColors.subtle(context),
           ),
           textAlign: TextAlign.center,
         ),
@@ -315,7 +316,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   AppStrings.forgotSpamHint(context),
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey[700],
+                    color: ThemeColors.subtle(context),
                   ),
                 ),
               ),
@@ -328,7 +329,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             Text(
               AppStrings.emailNotReceived(context),
-              style: TextStyle(color: Colors.grey[600]),
+              style: TextStyle(color: ThemeColors.subtle(context)),
             ),
             TextButton(
               onPressed:
@@ -383,7 +384,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             text,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[700],
+              color: ThemeColors.subtle(context),
             ),
           ),
         ),

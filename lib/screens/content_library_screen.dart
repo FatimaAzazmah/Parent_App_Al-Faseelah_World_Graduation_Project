@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
+import '../utils/app_strings.dart';
 
 import '../models/child_model.dart';
 import '../models/content_item_model.dart';
@@ -37,12 +39,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
 
   // الأنواع (مطابقة لقيود جدول content)
   static const List<_TypeInfo> _types = [
-    _TypeInfo('all', 'الكل', Icons.apps, Color(0xFF87CEEB)),
-    _TypeInfo('story', 'قصص', Icons.auto_stories, Color(0xFF87CEEB)),
-    _TypeInfo('learn', 'تعليمي', Icons.school, Color(0xFF90EE90)),
-    _TypeInfo('values', 'قيم', Icons.volunteer_activism, Color(0xFF81C784)),
-    _TypeInfo('challenge', 'تحديات', Icons.emoji_events, Color(0xFFFFB74D)),
-    _TypeInfo('play', 'ألعاب', Icons.sports_esports, Color(0xFFBA68C8)),
+    _TypeInfo('all', 'الكل', 'All', Icons.apps, Color(0xFF87CEEB)),
+    _TypeInfo('story', 'قصص', 'Stories', Icons.auto_stories, Color(0xFF87CEEB)),
+    _TypeInfo('learn', 'تعليمي', 'Educational', Icons.school, Color(0xFF90EE90)),
+    _TypeInfo('values', 'قيم', 'Values', Icons.volunteer_activism, Color(0xFF81C784)),
+    _TypeInfo('challenge', 'تحديات', 'Challenges', Icons.emoji_events, Color(0xFFFFB74D)),
+    _TypeInfo('play', 'ألعاب', 'Games', Icons.sports_esports, Color(0xFFBA68C8)),
   ];
 
   static _TypeInfo _typeInfo(String key) =>
@@ -113,7 +115,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('مكتبة المحتوى'),
+        title: Text(AppStrings.tr(context, 'مكتبة المحتوى', 'Content Library')),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
@@ -122,9 +124,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
           unselectedLabelColor: Colors.white70,
           labelStyle:
               const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          tabs: const [
-            Tab(text: 'استكشاف'),
-            Tab(text: 'المحفوظ'),
+          tabs: [
+            Tab(text: AppStrings.tr(context, 'استكشاف', 'Explore')),
+            Tab(text: AppStrings.tr(context, 'المحفوظ', 'Saved')),
           ],
         ),
       ),
@@ -154,22 +156,24 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
         width: double.infinity,
         color: const Color(0xFFFFF3E0),
         padding: const EdgeInsets.all(12),
-        child: const Text(
-          'أضيفي طفلاً أولاً لتخصيص المحتوى وحفظه',
+        child: Text(
+          AppStrings.tr(context, 'أضيفي طفلاً أولاً لتخصيص المحتوى وحفظه',
+              'Add a child first to personalize and save content'),
           textAlign: TextAlign.center,
-          style: TextStyle(color: Color(0xFFE65100)),
+          style: const TextStyle(color: Color(0xFFE65100)),
         ),
       );
     }
 
     return Container(
-      color: Colors.white,
+      color: ThemeColors.surface(context),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           const Icon(Icons.child_care, size: 20, color: Color(0xFF87CEEB)),
           const SizedBox(width: 8),
-          const Text('الطفل:', style: TextStyle(fontWeight: FontWeight.w600)),
+          Text(AppStrings.tr(context, 'الطفل:', 'Child:'),
+              style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(width: 8),
           Expanded(
             child: SizedBox(
@@ -184,7 +188,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                     padding: const EdgeInsets.only(left: 8),
                     child: ChoiceChip(
                       selected: selected,
-                      label: Text('${child.avatar} ${child.name}'),
+                      label: Text('${child.avatar} ${child.displayName}'),
                       onSelected: (_) async {
                         setState(() => _selectedChild = child);
                         await _loadForChild();
@@ -212,7 +216,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
             controller: _searchController,
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              hintText: 'ابحثي عن محتوى...',
+              hintText: AppStrings.tr(context, 'ابحثي عن محتوى...', 'Search content...'),
               prefixIcon: const Icon(Icons.search),
               contentPadding: const EdgeInsets.symmetric(vertical: 0),
               border: OutlineInputBorder(
@@ -225,7 +229,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
         if (_selectedChild != null) _buildPreferenceHint(),
         Expanded(
           child: _filtered.isEmpty
-              ? _buildEmpty('لا يوجد محتوى في هذا التصنيف')
+              ? _buildEmpty(AppStrings.tr(context,
+                  'لا يوجد محتوى في هذا التصنيف', 'No content in this category'))
               : ListView.builder(
                   padding: const EdgeInsets.all(12),
                   itemCount: _filtered.length,
@@ -254,11 +259,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
               selected: selected,
               avatar: Icon(t.icon,
                   size: 18,
-                  color: selected ? t.color : Colors.grey[600]),
+                  color: selected ? t.color : ThemeColors.subtle(context)),
               label: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(t.label),
+                  Text(t.label(context)),
                   if (isPreferred) ...[
                     const SizedBox(width: 4),
                     const Icon(Icons.star, size: 14, color: Color(0xFFFFB74D)),
@@ -293,8 +298,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
             Expanded(
               child: Text(
                 _preferredTypes.isEmpty
-                    ? 'اختاري الأنواع المفضّلة لـ ${_selectedChild!.name}'
-                    : 'التفضيلات: ${_preferredTypes.map((t) => _typeInfo(t).label).join('، ')}',
+                    ? AppStrings.tr(
+                        context,
+                        'اختاري الأنواع المفضّلة لـ ${_selectedChild!.displayName}',
+                        'Pick preferred types for ${_selectedChild!.displayName}')
+                    : '${AppStrings.tr(context, 'التفضيلات', 'Preferences')}: '
+                        '${_preferredTypes.map((t) => _typeInfo(t).label(context)).join(AppStrings.tr(context, '، ', ', '))}',
                 style: const TextStyle(fontSize: 13, color: Color(0xFF2E7D32)),
               ),
             ),
@@ -325,13 +334,21 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('الأنواع المفضّلة لـ ${child.name}',
+                  Text(
+                      AppStrings.tr(
+                          context,
+                          'الأنواع المفضّلة لـ ${child.displayName}',
+                          'Preferred types for ${child.displayName}'),
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
-                  Text('توجيه عام: الفسيلة ستميل لهذه الأنواع في جلساتها',
+                  Text(
+                      AppStrings.tr(
+                          context,
+                          'توجيه عام: الفسيلة ستميل لهذه الأنواع في جلساتها',
+                          'General guidance: Faseelah will lean toward these types during sessions'),
                       style:
-                          TextStyle(fontSize: 13, color: Colors.grey[600])),
+                          TextStyle(fontSize: 13, color: ThemeColors.subtle(context))),
                   const SizedBox(height: 16),
                   Wrap(
                     spacing: 8,
@@ -343,7 +360,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                       return FilterChip(
                         selected: on,
                         avatar: Icon(t.icon, size: 18),
-                        label: Text(t.label),
+                        label: Text(t.label(context)),
                         onSelected: (v) => setSheet(() {
                           if (v) {
                             selected.add(t.key);
@@ -360,7 +377,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.save),
-                      label: const Text('حفظ التفضيلات'),
+                      label: Text(AppStrings.tr(
+                          context, 'حفظ التفضيلات', 'Save preferences')),
                       onPressed: () async {
                         final ok = await _service.setPreferredTypes(
                             child.id, selected.toList());
@@ -370,8 +388,10 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(ok
-                                ? 'تم حفظ التفضيلات'
-                                : 'تعذّر الحفظ، حاولي مجدداً'),
+                                ? AppStrings.tr(context, 'تم حفظ التفضيلات',
+                                    'Preferences saved')
+                                : AppStrings.tr(context, 'تعذّر الحفظ، حاولي مجدداً',
+                                    'Could not save, please try again')),
                             backgroundColor:
                                 ok ? const Color(0xFF81C784) : Colors.red,
                             behavior: SnackBarBehavior.floating,
@@ -393,11 +413,14 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
   // ── تبويب المحفوظ ──
   Widget _buildSavedTab() {
     if (_selectedChild == null) {
-      return _buildEmpty('اختاري طفلاً لعرض محتواه المحفوظ');
+      return _buildEmpty(AppStrings.tr(context, 'اختاري طفلاً لعرض محتواه المحفوظ',
+          'Select a child to view their saved content'));
     }
     if (_savedContent.isEmpty) {
-      return _buildEmpty(
-          'لا يوجد محتوى محفوظ لـ ${_selectedChild!.name} بعد');
+      return _buildEmpty(AppStrings.tr(
+          context,
+          'لا يوجد محتوى محفوظ لـ ${_selectedChild!.displayName} بعد',
+          'No saved content for ${_selectedChild!.displayName} yet'));
     }
     return ListView.builder(
       padding: const EdgeInsets.all(12),
@@ -444,10 +467,10 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        _pill(t.label, t.color),
+                        _pill(t.label(context), t.color),
                         const SizedBox(width: 6),
-                        if (item.zoneNameAr != null)
-                          _pill(item.zoneNameAr!, Colors.grey.shade500),
+                        if (item.zoneName != null)
+                          _pill(item.zoneName!, Colors.grey.shade500),
                         const SizedBox(width: 6),
                         _difficultyDots(item.difficulty),
                       ],
@@ -502,8 +525,10 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(nowSaved
-              ? 'تم حفظ "${item.title}" لـ ${child.name}'
-              : 'تم إزالة "${item.title}"'),
+              ? AppStrings.tr(context, 'تم حفظ "${item.title}" لـ ${child.displayName}',
+                  '"${item.title}" saved for ${child.displayName}')
+              : AppStrings.tr(context, 'تم إزالة "${item.title}"',
+                  '"${item.title}" removed')),
           backgroundColor: const Color(0xFF81C784),
           behavior: SnackBarBehavior.floating,
         ),
@@ -518,8 +543,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
             .toList();
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تعذّر تنفيذ العملية، حاولي مجدداً'),
+        SnackBar(
+          content: Text(AppStrings.tr(context, 'تعذّر تنفيذ العملية، حاولي مجدداً',
+              'Operation failed, please try again')),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -554,7 +580,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: ThemeColors.border(context),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -581,42 +607,45 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold)),
                       ),
-                      _pill(t.label, t.color),
+                      _pill(t.label(context), t.color),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      if (item.zoneNameAr != null) ...[
+                      if (item.zoneName != null) ...[
                         const Icon(Icons.place, size: 16, color: Colors.grey),
                         const SizedBox(width: 4),
-                        Text(item.zoneNameAr!,
-                            style: TextStyle(color: Colors.grey[600])),
+                        Text(item.zoneName!,
+                            style: TextStyle(color: ThemeColors.subtle(context))),
                         const SizedBox(width: 12),
                       ],
-                      const Text('الصعوبة: '),
+                      Text(AppStrings.tr(context, 'الصعوبة: ', 'Difficulty: ')),
                       _difficultyDots(item.difficulty),
                     ],
                   ),
                   const SizedBox(height: 16),
                   if (item.storyText.isNotEmpty) ...[
-                    const Text('المحتوى',
-                        style: TextStyle(
+                    Text(AppStrings.tr(context, 'المحتوى', 'Content'),
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 6),
                     Text(item.storyText,
                         style: TextStyle(
                             fontSize: 15,
                             height: 1.6,
-                            color: Colors.grey[800])),
+                            color: ThemeColors.text(context))),
                     const SizedBox(height: 16),
                   ],
                   if (item.vocabulary.isNotEmpty)
-                    _chipSection('المفردات', item.vocabulary, t.color),
+                    _chipSection(AppStrings.tr(context, 'المفردات', 'Vocabulary'),
+                        item.vocabulary, t.color),
                   if (item.facts.isNotEmpty)
-                    _chipSection('حقائق', item.facts, const Color(0xFF4DD0E1)),
+                    _chipSection(AppStrings.tr(context, 'حقائق', 'Facts'),
+                        item.facts, const Color(0xFF4DD0E1)),
                   if (item.values.isNotEmpty)
-                    _chipSection('القيم', item.values, const Color(0xFF81C784)),
+                    _chipSection(AppStrings.tr(context, 'القيم', 'Values'),
+                        item.values, const Color(0xFF81C784)),
                   const SizedBox(height: 8),
                   if (_selectedChild != null)
                     SizedBox(
@@ -626,8 +655,13 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                             ? Icons.bookmark_remove
                             : Icons.bookmark_add),
                         label: Text(item.isSavedForChild
-                            ? 'إزالة من محفوظات ${_selectedChild!.name}'
-                            : 'حفظ لـ ${_selectedChild!.name}'),
+                            ? AppStrings.tr(
+                                context,
+                                'إزالة من محفوظات ${_selectedChild!.displayName}',
+                                "Remove from ${_selectedChild!.displayName}'s saved")
+                            : AppStrings.tr(context,
+                                'حفظ لـ ${_selectedChild!.displayName}',
+                                'Save for ${_selectedChild!.displayName}')),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: item.isSavedForChild
                               ? Colors.grey
@@ -714,7 +748,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
           const SizedBox(height: 12),
           Text(message,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 16, color: ThemeColors.subtle(context))),
         ],
       ),
     );
@@ -723,8 +757,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
 
 class _TypeInfo {
   final String key;
-  final String label;
+  final String labelAr;
+  final String labelEn;
   final IconData icon;
   final Color color;
-  const _TypeInfo(this.key, this.label, this.icon, this.color);
+  const _TypeInfo(this.key, this.labelAr, this.labelEn, this.icon, this.color);
+
+  String label(BuildContext context) =>
+      AppStrings.tr(context, labelAr, labelEn);
 }

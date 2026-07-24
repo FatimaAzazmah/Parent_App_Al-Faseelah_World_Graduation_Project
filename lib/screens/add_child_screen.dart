@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/child_model.dart';
 import '../services/child_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class AddChildScreen extends StatefulWidget {
   const AddChildScreen({super.key});
@@ -13,6 +14,7 @@ class AddChildScreen extends StatefulWidget {
 class _AddChildScreenState extends State<AddChildScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _nameEnController = TextEditingController();
   final _rfidController = TextEditingController();
   final _childService = ChildService();
 
@@ -42,6 +44,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _nameEnController.dispose();
     _rfidController.dispose();
     super.dispose();
   }
@@ -64,9 +67,12 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
       final rfidText = _rfidController.text.trim();
 
+      final nameEnText = _nameEnController.text.trim();
+
       final newChild = Child(
         id: '',
         name: _nameController.text,
+        nameEn: nameEnText.isEmpty ? null : nameEnText,
         age: _selectedAge,
         gender: _selectedGender,
         avatar: _selectedAvatar,
@@ -184,7 +190,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                        : Colors.grey[100],
+                        : ThemeColors.softFill(context),
                     borderRadius: BorderRadius.circular(12),
                     border: isSelected
                         ? Border.all(
@@ -235,6 +241,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
             return null;
           },
         ),
+        const SizedBox(height: 12),
+        TextFormField(
+          controller: _nameEnController,
+          textCapitalization: TextCapitalization.words,
+          textDirection: TextDirection.ltr,
+          decoration: InputDecoration(
+            hintText: AppStrings.tr(context, 'الاسم بالإنجليزية (اختياري)',
+                'Name in English (optional)'),
+            prefixIcon: const Icon(Icons.translate),
+          ),
+        ),
       ],
     );
   }
@@ -265,7 +282,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         const SizedBox(height: 6),
         Text(
           AppStrings.rfidHelperText(context),
-          style: TextStyle(color: Colors.grey[500], fontSize: 12),
+          style: TextStyle(color: ThemeColors.faint(context), fontSize: 12),
         ),
       ],
     );
@@ -289,7 +306,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: ThemeColors.softFill(context),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -333,7 +350,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         Center(
           child: Text(
             AppStrings.ageRangeHint(context),
-            style: TextStyle(color: Colors.grey[500], fontSize: 12),
+            style: TextStyle(color: ThemeColors.faint(context), fontSize: 12),
           ),
         ),
       ],
@@ -401,7 +418,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.grey[100],
+          color: isSelected ? color.withOpacity(0.2) : ThemeColors.softFill(context),
           borderRadius: BorderRadius.circular(16),
           border: isSelected ? Border.all(color: color, width: 2) : null,
         ),
@@ -413,7 +430,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
               label,
               style: TextStyle(
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? color : Colors.grey[700],
+                color: isSelected ? color : ThemeColors.subtle(context),
               ),
             ),
           ],
@@ -443,7 +460,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
               AppStrings.interestsSelectedCount(
                   context, _selectedInterests.length),
               style: TextStyle(
-                color: Colors.grey[500],
+                color: ThemeColors.faint(context),
                 fontSize: 12,
               ),
             ),
@@ -452,7 +469,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         const SizedBox(height: 8),
         Text(
           AppStrings.interestsPickHint(context),
-          style: TextStyle(color: Colors.grey[500], fontSize: 12),
+          style: TextStyle(color: ThemeColors.faint(context), fontSize: 12),
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -470,7 +487,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                     size: 16,
                     color: isSelected
                         ? Theme.of(context).colorScheme.primary
-                        : Colors.grey[600],
+                        : ThemeColors.subtle(context),
                   ),
                   const SizedBox(width: 4),
                   Text(AppStrings.interestDisplayLabel(

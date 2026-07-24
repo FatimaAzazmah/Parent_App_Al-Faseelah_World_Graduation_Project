@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -122,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Text(
             AppStrings.onboardingSkip(context),
             style: TextStyle(
-              color: Colors.grey[600],
+              color: ThemeColors.subtle(context),
               fontSize: 16,
             ),
           ),
@@ -180,7 +181,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             item.description,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: ThemeColors.subtle(context),
               height: 1.6,
             ),
             textAlign: TextAlign.center,
@@ -205,7 +206,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             decoration: BoxDecoration(
               color: _currentPage == index
                   ? items[_currentPage].color
-                  : Colors.grey[300],
+                  : ThemeColors.border(context),
               borderRadius: BorderRadius.circular(4),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/child_model.dart';
 import '../services/child_service.dart';
 import '../utils/app_strings.dart';
+import '../utils/app_colors.dart';
 
 class AIReportsScreen extends StatefulWidget {
   const AIReportsScreen({super.key});
@@ -163,7 +164,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                     return DropdownMenuItem(
                       value: entry.key,
                       child: Text(
-                        entry.value.name,
+                        entry.value.displayName,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -197,7 +198,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                     style: TextStyle(
                       color: _stats != null && _stats!.totalActivities > 0
                           ? const Color(0xFF2E7D32)
-                          : Colors.grey[600],
+                          : ThemeColors.subtle(context),
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -255,7 +256,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
             totalActivities > 0
                 ? AppStrings.aiReportsSummaryWithData(
                     context,
-                    _selectedChild?.name ??
+                    _selectedChild?.displayName ??
                         AppStrings.aiReportsChildFallback(context),
                     totalActivities,
                     totalHours,
@@ -386,7 +387,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 child: Center(
                   child: Text(
                     AppStrings.aiReportsSkillsPlaceholder(context),
-                    style: TextStyle(color: Colors.grey[500], fontSize: 13),
+                    style: TextStyle(color: ThemeColors.faint(context), fontSize: 13),
                   ),
                 ),
               ),
@@ -431,7 +432,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: progress / 100,
-              backgroundColor: Colors.grey[200],
+              backgroundColor: ThemeColors.fill(context),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 8,
             ),
@@ -502,7 +503,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                       const SizedBox(height: 12),
                       Text(
                         AppStrings.aiReportsBehaviorPlaceholder(context),
-                        style: TextStyle(color: Colors.grey[500]),
+                        style: TextStyle(color: ThemeColors.faint(context)),
                       ),
                     ],
                   ),
@@ -542,7 +543,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12, color: ThemeColors.subtle(context)),
                 ),
               ],
             ),
@@ -618,7 +619,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ThemeColors.surface(context),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -634,7 +635,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.4),
+                  style: TextStyle(fontSize: 13, color: ThemeColors.subtle(context), height: 1.4),
                 ),
               ],
             ),
@@ -754,7 +755,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
           Text(emoji, style: const TextStyle(fontSize: 20)),
           const SizedBox(height: 4),
           Text(period, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-          Text(hours, style: TextStyle(fontSize: 9, color: Colors.grey[600])),
+          Text(hours, style: TextStyle(fontSize: 9, color: ThemeColors.subtle(context))),
           const SizedBox(height: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -834,7 +835,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: ThemeColors.softFill(context),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -937,7 +938,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(AppStrings.aiReportsExportReportLine(
-                context, _selectedChild!.name)),
+                context, _selectedChild!.displayName)),
             const SizedBox(height: 8),
             Text(AppStrings.aiReportsExportIncludes(context)),
             const SizedBox(height: 8),
@@ -996,7 +997,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                     const Icon(Icons.check_circle, color: Colors.white),
                     const SizedBox(width: 8),
                     Text(AppStrings.aiReportsExportSuccess(
-                        context, _selectedChild!.name)),
+                        context, _selectedChild!.displayName)),
                   ],
                 ),
                 backgroundColor: lightGreen,
@@ -1031,7 +1032,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppStrings.aiReportsSharing(context, _selectedChild!.name)),
+        content: Text(AppStrings.aiReportsSharing(context, _selectedChild!.displayName)),
         backgroundColor: skyBlue,
       ),
     );

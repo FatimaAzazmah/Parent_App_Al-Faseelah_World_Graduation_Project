@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/zone_model.dart';
+import '../utils/app_strings.dart';
 
 /// خدمة إدارة المناطق (البوردات) — تركّز على البوردات المتغيرة
 /// التي يختار الأهل أيّها مفعّل على الجهاز حالياً.
@@ -72,7 +73,7 @@ class BoardService {
         'set_active_board',
         params: {'target_zone_key': zoneKey},
       );
-      return BoardResult(success: true, message: 'تم تفعيل البورد بنجاح');
+      return BoardResult(success: true, message: AppStrings.tr(null, 'تم تفعيل البورد بنجاح', 'Board activated successfully'));
     } catch (e) {
       print('[BoardService] setActiveBoard error: $e');
       // خطة بديلة: لو الدالة غير موجودة، نبدّل يدوياً
@@ -85,12 +86,13 @@ class BoardService {
             .from('zones')
             .update({'is_active': true})
             .eq('key', zoneKey);
-        return BoardResult(success: true, message: 'تم تفعيل البورد بنجاح');
+        return BoardResult(success: true, message: AppStrings.tr(null, 'تم تفعيل البورد بنجاح', 'Board activated successfully'));
       } catch (e2) {
         print('[BoardService] setActiveBoard fallback error: $e2');
         return BoardResult(
           success: false,
-          message: 'تعذّر تفعيل البورد، حاولي مرة أخرى',
+          message: AppStrings.tr(null, 'تعذّر تفعيل البورد، حاولي مرة أخرى',
+              'Could not activate the board, please try again'),
         );
       }
     }
