@@ -301,7 +301,7 @@ class _ChildActivityDetailScreenState extends State<ChildActivityDetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFBA68C8).withOpacity(0.15),
+                    color: const Color(0xFFBA68C8).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.psychology, color: Color(0xFFBA68C8)),
@@ -357,7 +357,7 @@ class _ChildActivityDetailScreenState extends State<ChildActivityDetailScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child:  Text(

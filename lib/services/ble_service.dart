@@ -11,8 +11,8 @@ class BleService {
   static final BleService instance = BleService._internal();
   factory BleService() => instance;
 
-  static const String SERVICE_UUID = "12345678-1234-1234-1234-123456789abc";
-  static const String CHAR_UUID    = "abcdefab-cdef-abcd-efab-cdefabcdefab";
+  static const String serviceUuid = "12345678-1234-1234-1234-123456789abc";
+  static const String charUuid = "abcdefab-cdef-abcd-efab-cdefabcdefab";
 
   BluetoothDevice?        _device;
   BluetoothCharacteristic? _characteristic;
@@ -43,9 +43,9 @@ class BleService {
       BluetoothCharacteristic? found;
 
       for (final s in services) {
-        if (s.uuid.toString().toLowerCase() == SERVICE_UUID.toLowerCase()) {
+        if (s.uuid.toString().toLowerCase() == serviceUuid.toLowerCase()) {
           for (final c in s.characteristics) {
-            if (c.uuid.toString().toLowerCase() == CHAR_UUID.toLowerCase()) {
+            if (c.uuid.toString().toLowerCase() == charUuid.toLowerCase()) {
               found = c;
               break;
             }

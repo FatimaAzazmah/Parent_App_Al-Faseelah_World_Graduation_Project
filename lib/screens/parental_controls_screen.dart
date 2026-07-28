@@ -88,7 +88,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, color: color, size: 22),
@@ -166,7 +166,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF90EE90).withOpacity(0.15),
+                    color: const Color(0xFF90EE90).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -195,9 +195,9 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
             SliderTheme(
               data:  SliderTheme.of(context).copyWith(
                 activeTrackColor: const Color(0xFF87CEEB),
-                inactiveTrackColor: const Color(0xFF87CEEB).withOpacity(0.2),
+                inactiveTrackColor: const Color(0xFF87CEEB).withValues(alpha: 0.2),
                 thumbColor: const Color(0xFF87CEEB),
-                overlayColor: const Color(0xFF87CEEB).withOpacity(0.1),
+                overlayColor: const Color(0xFF87CEEB).withValues(alpha: 0.1),
                 trackHeight: 8,
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14),
               ),
@@ -251,7 +251,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                   style: TextStyle(color: ThemeColors.subtle(context), fontSize: 12),
                 ),
                 value: _weekendExtraTime,
-                activeColor: const Color(0xFF87CEEB),
+                activeThumbColor: const Color(0xFF87CEEB),
                 onChanged: (value) {
                   setState(() {
                     _weekendExtraTime = value;
@@ -340,7 +340,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                         boxShadow: _activeDays[index]
                             ? [
                           BoxShadow(
-                            color: const Color(0xFF90EE90).withOpacity(0.4),
+                            color: const Color(0xFF90EE90).withValues(alpha: 0.4),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -467,7 +467,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                       _contentCategories[entry.key] = selected;
                     });
                   },
-                  selectedColor: const Color(0xFFFFB74D).withOpacity(0.2),
+                  selectedColor: const Color(0xFFFFB74D).withValues(alpha: 0.2),
                   checkmarkColor: const Color(0xFFFFB74D),
                   avatar: entry.value
                       ? null
@@ -522,7 +522,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   color: entry.value
-                      ? const Color(0xFFBA68C8).withOpacity(0.05)
+                      ? const Color(0xFFBA68C8).withValues(alpha: 0.05)
                       : ThemeColors.softFill(context),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -603,7 +603,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors. red. withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius. circular(8),
                 ),
                 child: const Icon(Icons. pin, color: Colors.red),
@@ -632,7 +632,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: value
-              ? const Color(0xFF90EE90).withOpacity(0.15)
+              ? const Color(0xFF90EE90).withValues(alpha: 0.15)
               : ThemeColors.fill(context),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -644,7 +644,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
       title: Text(title, style: const TextStyle(fontWeight: FontWeight. w500)),
       subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: Colors. grey[600])),
       value: value,
-      activeColor: const Color(0xFF90EE90),
+      activeThumbColor: const Color(0xFF90EE90),
       onChanged: onChanged,
     );
   }
@@ -670,7 +670,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
               subtitle:
                   Text(AppStrings.parentalAllowNotificationsSubtitle(context)),
               value: _allowNotifications,
-              activeColor: const Color(0xFF4DD0E1),
+              activeThumbColor: const Color(0xFF4DD0E1),
               onChanged: (value) {
                 setState(() {
                   _allowNotifications = value;
@@ -702,7 +702,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
               title: Text(AppStrings.parentalSoundEffectsTitle(context)),
               subtitle: Text(AppStrings.parentalSoundEffectsSubtitle(context)),
               value:  _allowSoundEffects,
-              activeColor:  const Color(0xFF9575CD),
+              activeThumbColor:  const Color(0xFF9575CD),
               onChanged: (value) {
                 setState(() {
                   _allowSoundEffects = value;
@@ -715,7 +715,7 @@ class _ParentalControlsScreenState extends State<ParentalControlsScreen> {
               title: Text(AppStrings.parentalBgMusicTitle(context)),
               subtitle: Text(AppStrings.parentalBgMusicSubtitle(context)),
               value: _allowBackgroundMusic,
-              activeColor: const Color(0xFF9575CD),
+              activeThumbColor: const Color(0xFF9575CD),
               onChanged: (value) {
                 setState(() {
                   _allowBackgroundMusic = value;

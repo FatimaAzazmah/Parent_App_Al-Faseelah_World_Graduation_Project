@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               blurRadius: 10,
               offset: const Offset(0, -5),
             ),
@@ -198,7 +198,7 @@ class _HomeContentState extends State<HomeContent> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF87CEEB).withOpacity(0.4),
+            color: const Color(0xFF87CEEB).withValues(alpha: 0.4),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -209,7 +209,7 @@ class _HomeContentState extends State<HomeContent> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.waving_hand, color: Colors.white, size: 28),
@@ -231,7 +231,7 @@ class _HomeContentState extends State<HomeContent> {
                   _children.isEmpty
                       ? AppStrings.welcomeAddChild(context)
                       : '${_children.length} ${AppStrings.tr(context, "أطفال مسجلين", "children registered")}',
-                  style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 14),
                 ),
               ],
             ),
@@ -258,8 +258,8 @@ class _HomeContentState extends State<HomeContent> {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: isConnected
-                            ? const Color(0xFF90EE90).withOpacity(0.2)
-                            : Colors.grey.withOpacity(0.15),
+                            ? const Color(0xFF90EE90).withValues(alpha: 0.2)
+                            : Colors.grey.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -438,7 +438,7 @@ class _HomeContentState extends State<HomeContent> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, size: 28, color: color),
@@ -472,8 +472,8 @@ class _HomeContentState extends State<HomeContent> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(colors: [
-            const Color(0xFF90EE90).withOpacity(0.1),
-            const Color(0xFF87CEEB).withOpacity(0.1),
+            const Color(0xFF90EE90).withValues(alpha: 0.1),
+            const Color(0xFF87CEEB).withValues(alpha: 0.1),
           ]),
         ),
         child: Column(
@@ -564,7 +564,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
                 CircleAvatar(
                   radius: 28,
                   backgroundColor:
-                  const Color(0xFF87CEEB).withOpacity(0.2),
+                  const Color(0xFF87CEEB).withValues(alpha: 0.2),
                   child: Text(widget.child.avatar,
                       style: const TextStyle(fontSize: 28)),
                 ),
@@ -676,7 +676,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: color, size: 20),
@@ -726,7 +726,7 @@ class _ChildStatsCardState extends State<_ChildStatsCard> {
             Container(
               padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
-                color: const Color(0xFF87CEEB).withOpacity(0.12),
+                color: const Color(0xFF87CEEB).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.play_circle_outline,

@@ -1,5 +1,6 @@
 // Copyright © 2026 Fatima Azazmah. All rights reserved.
 // Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/zone_model.dart';
 import '../utils/app_strings.dart';
@@ -37,7 +38,7 @@ class BoardService {
           if (row is Map) _boardFromSupabaseRow(Map<String, dynamic>.from(row)),
       ];
     } catch (e) {
-      print('[BoardService] getDynamicBoards error: $e');
+      debugPrint('[BoardService] getDynamicBoards error: $e');
       return [];
     }
   }
@@ -61,7 +62,7 @@ class BoardService {
         ),
       );
     } catch (e) {
-      print('[BoardService] setActiveBoard error: $e');
+      debugPrint('[BoardService] setActiveBoard error: $e');
       return BoardResult(
         success: false,
         message: AppStrings.tr(

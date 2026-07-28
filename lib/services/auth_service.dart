@@ -1,6 +1,7 @@
 // Copyright © 2026 Fatima Azazmah. All rights reserved.
 // Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../utils/app_strings.dart';
@@ -75,7 +76,7 @@ class AuthService {
 
       return _userDataFromAuthUser(user);
     } catch (e) {
-      print('[AuthService] getCurrentUserData error: $e');
+      debugPrint('[AuthService] getCurrentUserData error: $e');
       final user = _client.auth.currentUser;
       if (user == null) return null;
       return _userDataFromAuthUser(user);
@@ -109,7 +110,7 @@ class AuthService {
         user: userData,
       );
     } catch (e) {
-      print('[AuthService] login error: $e');
+      debugPrint('[AuthService] login error: $e');
       return AuthResult(
         success: false,
         message: _mapSupabaseAuthError(
@@ -188,7 +189,7 @@ class AuthService {
         user: userData,
       );
     } catch (e) {
-      print('[AuthService] register error: $e');
+      debugPrint('[AuthService] register error: $e');
       return AuthResult(
         success: false,
         message: _mapSupabaseAuthError(
@@ -220,7 +221,7 @@ class AuthService {
         ),
       );
     } catch (e) {
-      print('[AuthService] forgotPassword error: $e');
+      debugPrint('[AuthService] forgotPassword error: $e');
       return AuthResult(
         success: false,
         message: _mapSupabaseAuthError(

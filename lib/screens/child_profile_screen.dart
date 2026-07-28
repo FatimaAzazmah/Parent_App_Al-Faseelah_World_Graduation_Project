@@ -230,7 +230,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               margin: const EdgeInsets.only(left: 12),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
                     : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
@@ -289,7 +289,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               children: [
                 CircleAvatar(
                   backgroundColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   radius: 50,
                   child: Text(
                     child['avatar'],
@@ -335,7 +335,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFBA68C8).withOpacity(0.1),
+                color: const Color(0xFFBA68C8).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -412,7 +412,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 24),
@@ -470,7 +470,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 children: interests.map((interest) {
                   return Chip(
                     backgroundColor:
-                        Theme.of(context).colorScheme.secondary.withOpacity(0.15),
+                        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15),
                     label: Text(
                       AppStrings.interestDisplayLabel(
                           context, interest.toString()),
@@ -620,7 +620,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF87CEEB).withOpacity(0.15),
+                    color: const Color(0xFF87CEEB).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.timer, color: Color(0xFF87CEEB)),
@@ -635,7 +635,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF90EE90).withOpacity(0.15),
+                    color: const Color(0xFF90EE90).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.content_copy, color: Color(0xFF90EE90)),
@@ -650,7 +650,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFB74D).withOpacity(0.15),
+                    color: const Color(0xFFFFB74D).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.school, color: Color(0xFFFFB74D)),
@@ -983,7 +983,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                         selectedColor: Theme.of(context)
                             .colorScheme
                             .primary
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                         checkmarkColor: Theme.of(context).colorScheme.primary,
                       );
                     }).toList(),

@@ -1,5 +1,6 @@
 // Copyright © 2026 Fatima Azazmah. All rights reserved.
 // Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/content_item_model.dart';
 
@@ -45,7 +46,7 @@ class ContentLibraryService {
             ),
       ];
     } catch (e) {
-      print('[ContentLibraryService] getLibraryForChild error: $e');
+      debugPrint('[ContentLibraryService] getLibraryForChild error: $e');
       return [];
     }
   }
@@ -69,7 +70,7 @@ class ContentLibraryService {
       }
       return ids;
     } catch (e) {
-      print('[ContentLibraryService] _savedContentIds error: $e');
+      debugPrint('[ContentLibraryService] _savedContentIds error: $e');
       return <int>{};
     }
   }
@@ -83,7 +84,7 @@ class ContentLibraryService {
       });
       return true;
     } catch (e) {
-      print('[ContentLibraryService] saveContentForChild error: $e');
+      debugPrint('[ContentLibraryService] saveContentForChild error: $e');
       return false;
     }
   }
@@ -98,7 +99,7 @@ class ContentLibraryService {
           .eq('content_id', contentId);
       return true;
     } catch (e) {
-      print('[ContentLibraryService] unsaveContentForChild error: $e');
+      debugPrint('[ContentLibraryService] unsaveContentForChild error: $e');
       return false;
     }
   }
@@ -122,7 +123,7 @@ class ContentLibraryService {
           if (type != null) type.toString(),
       ];
     } catch (e) {
-      print('[ContentLibraryService] getPreferredTypes error: $e');
+      debugPrint('[ContentLibraryService] getPreferredTypes error: $e');
       return [];
     }
   }
@@ -137,7 +138,7 @@ class ContentLibraryService {
       });
       return true;
     } catch (e) {
-      print('[ContentLibraryService] setPreferredTypes error: $e');
+      debugPrint('[ContentLibraryService] setPreferredTypes error: $e');
       return false;
     }
   }
@@ -163,7 +164,7 @@ class ContentLibraryService {
       }
       return achieved;
     } catch (e) {
-      print('[ContentLibraryService] getAchievementsWithDates error: $e');
+      debugPrint('[ContentLibraryService] getAchievementsWithDates error: $e');
       return {};
     }
   }

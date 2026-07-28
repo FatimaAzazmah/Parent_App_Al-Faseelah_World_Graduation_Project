@@ -150,7 +150,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
               border: Border.all(
                 color: Theme.of(context).colorScheme.primary,
@@ -189,7 +189,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                         : ThemeColors.softFill(context),
                     borderRadius: BorderRadius.circular(12),
                     border: isSelected
@@ -418,7 +418,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : ThemeColors.softFill(context),
+          color: isSelected ? color.withValues(alpha: 0.2) : ThemeColors.softFill(context),
           borderRadius: BorderRadius.circular(16),
           border: isSelected ? Border.all(color: color, width: 2) : null,
         ),
@@ -504,7 +504,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                 });
               },
               selectedColor:
-              Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               checkmarkColor: Theme.of(context).colorScheme.primary,
             );
           }).toList(),

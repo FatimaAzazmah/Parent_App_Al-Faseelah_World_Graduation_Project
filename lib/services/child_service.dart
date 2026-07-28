@@ -1,6 +1,7 @@
 // Copyright © 2026 Fatima Azazmah. All rights reserved.
 // Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_strings.dart';
 import '../models/child_model.dart';
@@ -32,7 +33,7 @@ class ChildService {
           .map((row) => _childFromSupabaseRow(row as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('[ChildService] getChildren error: $e');
+      debugPrint('[ChildService] getChildren error: $e');
       return [];
     }
   }
@@ -56,9 +57,9 @@ class ChildService {
           .maybeSingle();
 
       if (row == null) return null;
-      return _childFromSupabaseRow(row as Map<String, dynamic>);
+      return _childFromSupabaseRow(row);
     } catch (e) {
-      print('[ChildService] getChildById error: $e');
+      debugPrint('[ChildService] getChildById error: $e');
       return null;
     }
   }
@@ -77,9 +78,9 @@ class ChildService {
           .maybeSingle();
 
       if (row == null) return null;
-      return _childFromSupabaseRow(row as Map<String, dynamic>);
+      return _childFromSupabaseRow(row);
     } catch (e) {
-      print('[ChildService] getChildByRfid error: $e');
+      debugPrint('[ChildService] getChildByRfid error: $e');
       return null;
     }
   }
@@ -107,7 +108,7 @@ class ChildService {
           .select()
           .single();
 
-      final addedChild = _childFromSupabaseRow(inserted as Map<String, dynamic>);
+      final addedChild = _childFromSupabaseRow(inserted);
 
       return ServiceResult(
         success: true,
@@ -116,7 +117,7 @@ class ChildService {
         data: addedChild,
       );
     } catch (e) {
-      print('[ChildService] addChild error: $e');
+      debugPrint('[ChildService] addChild error: $e');
       return ServiceResult(
         success: false,
         message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
@@ -148,7 +149,7 @@ class ChildService {
         data: child,
       );
     } catch (e) {
-      print('[ChildService] updateChild error: $e');
+      debugPrint('[ChildService] updateChild error: $e');
       return ServiceResult(
         success: false,
         message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
@@ -178,7 +179,7 @@ class ChildService {
         message: AppStrings.tr(null, 'تم الحذف بنجاح', 'Deleted successfully'),
       );
     } catch (e) {
-      print('[ChildService] deleteChild error: $e');
+      debugPrint('[ChildService] deleteChild error: $e');
       return ServiceResult(
         success: false,
         message: AppStrings.tr(null, 'حدث خطأ: $e', 'Error: $e'),
@@ -318,7 +319,7 @@ class ChildService {
           .map((row) => _sessionFromSupabaseRow(row as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('[ChildService] getSessionsForChild error: $e');
+      debugPrint('[ChildService] getSessionsForChild error: $e');
       return [];
     }
   }
@@ -335,9 +336,9 @@ class ChildService {
           .eq('parent_id', user.id)
           .maybeSingle();
       if (row == null) return null;
-      return _sessionFromSupabaseRow(row as Map<String, dynamic>);
+      return _sessionFromSupabaseRow(row);
     } catch (e) {
-      print('[ChildService] getSessionById error: $e');
+      debugPrint('[ChildService] getSessionById error: $e');
       return null;
     }
   }
@@ -414,7 +415,7 @@ class ChildService {
         topSkill: AppStrings.tr(null, 'التعلم', 'Learning'),
       );
     } catch (e) {
-      print('[ChildService] getChildStats error: $e');
+      debugPrint('[ChildService] getChildStats error: $e');
       return empty;
     }
   }

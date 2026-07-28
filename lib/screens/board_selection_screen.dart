@@ -200,7 +200,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Center(
@@ -257,14 +257,14 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               p.displayName,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: color.withOpacity(0.9),
+                                color: color.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

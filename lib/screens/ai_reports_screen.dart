@@ -144,7 +144,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: skyBlue.withOpacity(0.15),
+                color: skyBlue.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -184,7 +184,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: lightGreen.withOpacity(0.15),
+                color: lightGreen.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -228,7 +228,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: skyBlue.withOpacity(0.3),
+            color: skyBlue.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -357,7 +357,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: purple.withOpacity(0.15),
+                    color: purple.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.analytics, color: purple),
@@ -408,7 +408,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(icon, size: 18, color: color),
@@ -479,7 +479,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: cyan.withOpacity(0.15),
+                    color: cyan.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.psychology, color: cyan),
@@ -527,9 +527,9 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -578,7 +578,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [orange.withOpacity(0.1), purple.withOpacity(0.1)],
+            colors: [orange.withValues(alpha: 0.1), purple.withValues(alpha: 0.1)],
           ),
         ),
         child: Column(
@@ -589,7 +589,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: orange.withOpacity(0.15),
+                    color: orange.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.lightbulb, color: orange),
@@ -688,7 +688,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: skyBlue.withOpacity(0.15),
+                    color: skyBlue.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.access_time, color: skyBlue),
@@ -719,7 +719,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: lightGreen.withOpacity(0.1),
+                color: lightGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -746,9 +746,9 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -817,7 +817,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: lightGreen.withOpacity(0.15),
+                    color: lightGreen.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.compare_arrows, color: lightGreen),
@@ -870,7 +870,7 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: orange.withOpacity(0.15),
+                    color: orange.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.file_download, color: orange),
@@ -988,7 +988,8 @@ class _AIReportsScreenState extends State<AIReportsScreen> {
       barrierDismissible: false,
       builder: (context) {
         Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
+          // السياق هنا سياق الحوار، ففحصه هو الصحيح لا فحص الشاشة.
+          if (context.mounted) {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

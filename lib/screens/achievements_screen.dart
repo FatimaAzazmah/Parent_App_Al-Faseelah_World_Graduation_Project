@@ -177,7 +177,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             child: LinearProgressIndicator(
               value: pct,
               minHeight: 10,
-              backgroundColor: ThemeColors.surface(context).withOpacity(0.3),
+              backgroundColor: ThemeColors.surface(context).withValues(alpha: 0.3),
               valueColor:
                   const AlwaysStoppedAnimation<Color>(Colors.white),
             ),
@@ -228,7 +228,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         shape: const Border(),
         collapsedShape: const Border(),
         leading: CircleAvatar(
-          backgroundColor: info.color.withOpacity(0.2),
+          backgroundColor: info.color.withValues(alpha: 0.2),
           child: Text(info.emoji, style: const TextStyle(fontSize: 20)),
         ),
         title: Text(info.label(context),
@@ -239,7 +239,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: info.color.withOpacity(0.15),
+            color: info.color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(

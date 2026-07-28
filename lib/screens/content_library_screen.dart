@@ -246,7 +246,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                 ],
               ),
               onSelected: (_) => setState(() => _selectedType = t.key),
-              selectedColor: t.color.withOpacity(0.2),
+              selectedColor: t.color.withValues(alpha: 0.2),
             ),
           );
         },
@@ -263,7 +263,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
         margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF90EE90).withOpacity(0.15),
+          color: const Color(0xFF90EE90).withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -343,7 +343,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                             selected.remove(t.key);
                           }
                         }),
-                        selectedColor: t.color.withOpacity(0.25),
+                        selectedColor: t.color.withValues(alpha: 0.25),
                       );
                     }).toList(),
                   ),
@@ -355,17 +355,25 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                       label: Text(AppStrings.tr(
                           context, 'حفظ التفضيلات', 'Save preferences')),
                       onPressed: () async {
-                        final ok = await _service.setPreferredTypes(
-                            child.id, selected.toList());
-                        if (!mounted) return;
-                        Navigator.pop(context);
-                        setState(() => _preferredTypes = selected.toList());
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        // تُلتقط قبل الانتظار لأن سياق الورقة ينتهي بإغلاقها.
+                        final navigator = Navigator.of(context);
+                        final messenger = ScaffoldMessenger.of(context);
+                        final types = selected.toList();
+
+                        final ok =
+                            await _service.setPreferredTypes(child.id, types);
+
+                        navigator.pop();
+                        if (mounted) {
+                          setState(() => _preferredTypes = types);
+                        }
+
+                        messenger.showSnackBar(
                           SnackBar(
                             content: Text(ok
-                                ? AppStrings.tr(context, 'تم حفظ التفضيلات',
+                                ? AppStrings.tr(null, 'تم حفظ التفضيلات',
                                     'Preferences saved')
-                                : AppStrings.tr(context, 'تعذّر الحفظ، حاولي مجدداً',
+                                : AppStrings.tr(null, 'تعذّر الحفظ، حاولي مجدداً',
                                     'Could not save, please try again')),
                             backgroundColor:
                                 ok ? const Color(0xFF81C784) : Colors.red,
@@ -424,7 +432,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: t.color.withOpacity(0.15),
+                  color: t.color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(t.icon, color: t.color, size: 28),
@@ -560,7 +568,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                     height: 130,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [t.color.withOpacity(0.7), t.color],
+                        colors: [t.color.withValues(alpha: 0.7), t.color],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),

@@ -94,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       .of(context)
                       .colorScheme
                       .primary
-                      .withOpacity(0.2),
+                      .withValues(alpha: 0.2),
                   child: const Icon(
                       Icons.person, size: 40, color: Color(0xFF87CEEB)),
                 ),
@@ -137,7 +137,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF90EE90).withOpacity(0.2),
+                      color: const Color(0xFF90EE90).withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -225,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             .of(context)
             .colorScheme
             .primary
-            .withOpacity(0.2),
+            .withValues(alpha: 0.2),
         child: Text(avatar, style: const TextStyle(fontSize: 24)),
       ),
       title: Text(name, style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -237,7 +237,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF90EE90).withOpacity(0.2),
+                color: const Color(0xFF90EE90).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -496,7 +496,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               .of(context)
               .colorScheme
               .primary
-              .withOpacity(0.1),
+              .withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: Theme
@@ -510,7 +510,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: Theme
+        activeThumbColor: Theme
             .of(context)
             .colorScheme
             .primary,
@@ -541,7 +541,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: color, size: 20),
@@ -588,7 +588,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   .of(context)
                   .colorScheme
                   .primary
-                  .withOpacity(0.1),
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: Theme
@@ -605,7 +605,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   .of(context)
                   .colorScheme
                   .primary
-                  .withOpacity(0.1),
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -630,7 +630,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 .of(context)
                 .colorScheme
                 .primary
-                .withOpacity(0.2),
+                .withValues(alpha: 0.2),
             thumbColor: Theme
                 .of(context)
                 .colorScheme
@@ -639,7 +639,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 .of(context)
                 .colorScheme
                 .primary
-                .withOpacity(0.1),
+                .withValues(alpha: 0.1),
           ),
           child: Slider(
             value: value,
@@ -659,7 +659,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
+            color: Colors.red.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Icon(Icons.logout, color: Colors.red, size: 20),
@@ -685,7 +685,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   .of(context)
                   .colorScheme
                   .primary
-                  .withOpacity(0.1),
+                  .withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: ClipRRect(
@@ -776,7 +776,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           .of(sheetContext)
                           .colorScheme
                           .primary
-                          .withOpacity(0.2),
+                          .withValues(alpha: 0.2),
                       child: Stack(
                         children: [
                           const Icon(
@@ -1020,60 +1020,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(AppStrings.chooseLanguage(context)),
               ],
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RadioListTile<String>(
-                  title: Text(AppStrings.languageArabicTitle(context)),
-                  subtitle: Text(AppStrings.languageArabicSubtitle(context)),
-                  value: 'ar',
-                  groupValue: Localizations.localeOf(context).languageCode,
-                  activeColor: Theme
-                      .of(context)
-                      .colorScheme
-                      .primary,
-                  onChanged: (value) async {
-                    if (value == null) return;
-                    await AppLocale.setLocale(Locale(value));
-                    if (!context.mounted) return;
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          value == 'ar'
-                              ? AppStrings.languageChangedAr(context)
-                              : AppStrings.languageChangedEn(context),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text(AppStrings.languageEnglishTitle(context)),
-                  subtitle: Text(AppStrings.languageEnglishSubtitle(context)),
-                  value: 'en',
-                  groupValue: Localizations.localeOf(context).languageCode,
-                  activeColor: Theme
-                      .of(context)
-                      .colorScheme
-                      .primary,
-                  onChanged: (value) async {
-                    if (value == null) return;
-                    await AppLocale.setLocale(Locale(value));
-                    if (!context.mounted) return;
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          value == 'ar'
-                              ? AppStrings.languageChangedAr(context)
-                              : AppStrings.languageChangedEn(context),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+            // مجموعة واحدة تتولّى الاختيار، فيُكتب منطق التبديل مرة واحدة
+            // بدل تكراره في كل خيار.
+            content: RadioGroup<String>(
+              groupValue: Localizations.localeOf(context).languageCode,
+              onChanged: (value) async {
+                if (value == null) return;
+
+                // يُلتقطان قبل الانتظار لأن سياق الحوار ينتهي بإغلاقه.
+                final navigator = Navigator.of(context);
+                final messenger = ScaffoldMessenger.of(context);
+
+                await AppLocale.setLocale(Locale(value));
+
+                // بعد التبديل تُقرأ الرسالة باللغة الجديدة.
+                final message = AppStrings.tr(
+                  null,
+                  'تم تغيير اللغة إلى العربية',
+                  'Language changed to English',
+                );
+
+                navigator.pop();
+                messenger.showSnackBar(SnackBar(content: Text(message)));
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<String>(
+                    title: Text(AppStrings.languageArabicTitle(context)),
+                    subtitle: Text(AppStrings.languageArabicSubtitle(context)),
+                    value: 'ar',
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  RadioListTile<String>(
+                    title: Text(AppStrings.languageEnglishTitle(context)),
+                    subtitle: Text(AppStrings.languageEnglishSubtitle(context)),
+                    value: 'en',
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                ],
+              ),
             ),
           ),
     );
@@ -1116,7 +1102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: Text(AppStrings.notifChildActivityTitle(context)),
                     subtitle: Text(AppStrings.notifChildActivitySub(context)),
                     value: activityNotifications,
-                    activeColor: Theme
+                    activeThumbColor: Theme
                         .of(context)
                         .colorScheme
                         .primary,
@@ -1130,7 +1116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: Text(AppStrings.notifProgressReportsTitle(context)),
                     subtitle: Text(AppStrings.notifProgressReportsSub(context)),
                     value: progressNotifications,
-                    activeColor: Theme
+                    activeThumbColor: Theme
                         .of(context)
                         .colorScheme
                         .primary,
@@ -1144,7 +1130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: Text(AppStrings.notifTipsTitle(context)),
                     subtitle: Text(AppStrings.notifTipsSub(context)),
                     value: tipsNotifications,
-                    activeColor: Theme
+                    activeThumbColor: Theme
                         .of(context)
                         .colorScheme
                         .primary,
@@ -1158,7 +1144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: Text(AppStrings.notifUpdatesTitle(context)),
                     subtitle: Text(AppStrings.notifUpdatesSub(context)),
                     value: updateNotifications,
-                    activeColor: Theme
+                    activeThumbColor: Theme
                         .of(context)
                         .colorScheme
                         .primary,
@@ -2079,16 +2065,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.pop(context);
+                  // تُلتقط قبل الانتظار لأن سياق الحوار ينتهي بإغلاقه.
+                  final navigator = Navigator.of(context);
+                  final messenger = ScaffoldMessenger.of(context);
+                  final doneMessage = AppStrings.logoutSuccess(context);
+
+                  navigator.pop();
                   await _authService.logout();
-                  if (mounted) {
-                    Navigator.pushReplacementNamed(context, '/login');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content:
-                          Text(AppStrings.logoutSuccess(context))),
-                    );
-                  }
+
+                  navigator.pushReplacementNamed('/login');
+                  messenger.showSnackBar(
+                    SnackBar(content: Text(doneMessage)),
+                  );
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Text(AppStrings.logout(context)),

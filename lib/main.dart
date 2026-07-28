@@ -323,7 +323,7 @@ class AlFaseelahParentApp extends StatelessWidget {
 
       cardTheme: CardThemeData(
         elevation: 4,
-        shadowColor: const Color(0xFF87CEEB).withOpacity(0.3),
+        shadowColor: const Color(0xFF87CEEB).withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: Colors.white,
       ),

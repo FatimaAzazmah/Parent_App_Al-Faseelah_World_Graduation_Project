@@ -1,5 +1,6 @@
 // Copyright © 2026 Fatima Azazmah. All rights reserved.
 // Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Minimal Supabase auth wrapper.
@@ -20,7 +21,7 @@ class SupabaseService {
       );
     } catch (e) {
       // Keep error details for debugging (Step 7).
-      print('[SupabaseService] login error: $e');
+      debugPrint('[SupabaseService] login error: $e');
       rethrow;
     }
   }
@@ -35,7 +36,7 @@ class SupabaseService {
         password: password,
       );
     } catch (e) {
-      print('[SupabaseService] register error: $e');
+      debugPrint('[SupabaseService] register error: $e');
       rethrow;
     }
   }
@@ -44,7 +45,7 @@ class SupabaseService {
     try {
       await _client.auth.signOut();
     } catch (e) {
-      print('[SupabaseService] logout error: $e');
+      debugPrint('[SupabaseService] logout error: $e');
       rethrow;
     }
   }

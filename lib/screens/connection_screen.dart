@@ -155,8 +155,10 @@ class _ConnectionScreenState extends State<ConnectionScreen>
           ),
           ElevatedButton(
             onPressed: () async {
+              // يُلتقط قبل الانتظار لأن سياق الحوار ينتهي بإغلاقه.
+              final navigator = Navigator.of(context);
               await _ble.disconnect();
-              if (mounted) Navigator.pop(context);
+              navigator.pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: Text(AppStrings.connectionDisconnect(context)),
@@ -191,7 +193,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
         return;
       }
 
-      final session = rows.first as Map<String, dynamic>;
+      final session = rows.first;
       final payload = jsonEncode({"type": "session", "data": session});
       final ok = await _ble.sendData(payload);
       _showSnack(ok ? 'Session sent to Raspberry Pi ✅' : 'Send failed ❌',
@@ -333,14 +335,14 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: Colors.white.withOpacity(0.5), width: 3),
+                            color: Colors.white.withValues(alpha: 0.5), width: 3),
                       ),
                     ),
                   ),
                 Container(
                   width: 80, height: 80,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -375,7 +377,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                         ? AppStrings.connectionSubtitleScanning(context)
                         : AppStrings.connectionSubtitleIdle(context),
                     style: TextStyle(
-                        fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                        fontSize: 14, color: Colors.white.withValues(alpha: 0.9)),
                   ),
                 ],
               ),
@@ -479,7 +481,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF90EE90).withOpacity(0.15),
+                  color: const Color(0xFF90EE90).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.cloud_sync,
@@ -500,10 +502,10 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.08),
+                  color: Colors.orange.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(10),
                   border:
-                  Border.all(color: Colors.orange.withOpacity(0.3)),
+                  Border.all(color: Colors.orange.withValues(alpha: 0.3)),
                 ),
                 child: const Row(children: [
                   Icon(Icons.warning_amber,
@@ -521,7 +523,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                   color: ThemeColors.softFill(context),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: const Color(0xFF87CEEB).withOpacity(0.5)),
+                      color: const Color(0xFF87CEEB).withValues(alpha: 0.5)),
                 ),
                 child: Row(children: [
                   const Icon(Icons.child_care,
@@ -600,9 +602,9 @@ class _ConnectionScreenState extends State<ConnectionScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.05),
+                color: Colors.blue.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -703,7 +705,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                       leading: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF87CEEB).withOpacity(0.15),
+                          color: const Color(0xFF87CEEB).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(Icons.toys,
@@ -763,7 +765,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFB74D).withOpacity(0.15),
+                  color: const Color(0xFFFFB74D).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.help_outline,
@@ -811,7 +813,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 color: Theme.of(context)
                     .colorScheme
                     .primary
-                    .withOpacity(0.3)),
+                    .withValues(alpha: 0.3)),
         ]),
         const SizedBox(width: 12),
         Expanded(

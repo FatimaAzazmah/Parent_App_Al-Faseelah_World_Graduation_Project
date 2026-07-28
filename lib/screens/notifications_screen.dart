@@ -119,7 +119,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _markAllAsRead() {
     setState(() {
-      for (final n in _notifications) n.isRead = true;
+      for (final n in _notifications) {
+        n.isRead = true;
+      }
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(AppStrings.notificationsMarkAllDone(context))),
@@ -257,7 +259,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget _buildCard(_AppNotification n) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: n.isRead ? null : const Color(0xFF87CEEB).withOpacity(0.05),
+      color: n.isRead ? null : const Color(0xFF87CEEB).withValues(alpha: 0.05),
       child: InkWell(
         onTap: () {
           _markAsRead(n.id);
@@ -281,7 +283,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: n.color.withOpacity(0.15),
+                      color: n.color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(n.icon, color: n.color, size: 24),

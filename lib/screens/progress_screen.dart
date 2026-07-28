@@ -469,7 +469,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 24),
@@ -531,7 +531,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF90EE90).withOpacity(0.15),
+                    color: const Color(0xFF90EE90).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -661,7 +661,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.15),
+                            color: color.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Icon(skill['icon'] as IconData, size: 18, color: color),
@@ -678,7 +678,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: skill['trend'] == 'up'
-                                ? const Color(0xFF90EE90).withOpacity(0.15)
+                                ? const Color(0xFF90EE90).withValues(alpha: 0.15)
                                 : ThemeColors.fill(context),
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -732,7 +732,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -796,7 +796,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: (achievement['color'] as Color).withOpacity(0.15),
+                            color: (achievement['color'] as Color).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -925,7 +925,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF87CEEB).withOpacity(0.1),
+                              color: const Color(0xFF87CEEB).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -955,7 +955,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -987,8 +987,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              const Color(0xFF90EE90).withOpacity(0.1),
-              const Color(0xFF87CEEB).withOpacity(0.1),
+              const Color(0xFF90EE90).withValues(alpha: 0.1),
+              const Color(0xFF87CEEB).withValues(alpha: 0.1),
             ],
           ),
         ),
@@ -1000,7 +1000,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFBA68C8).withOpacity(0.15),
+                    color: const Color(0xFFBA68C8).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.auto_awesome, color: Color(0xFFBA68C8)),
@@ -1052,7 +1052,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -1108,7 +1108,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF25D366).withOpacity(0.15),
+                    color: const Color(0xFF25D366).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.chat, color: Color(0xFF25D366)),
@@ -1123,7 +1123,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1DA1F2).withOpacity(0.15),
+                    color: const Color(0xFF1DA1F2).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.email, color: Color(0xFF1DA1F2)),
@@ -1138,7 +1138,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.15),
+                    color: Colors.grey.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.copy, color: Colors.grey),
@@ -1243,7 +1243,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             leading: Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: (achievement['color'] as Color).withOpacity(0.15),
+                                color: (achievement['color'] as Color).withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(

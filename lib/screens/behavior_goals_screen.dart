@@ -256,7 +256,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 24),
@@ -362,7 +362,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(zoneData['icon'] as IconData, color: color, size: 24),
@@ -462,7 +462,7 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: purple.withOpacity(0.1),
+                    color: purple.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -662,18 +662,22 @@ class _BehaviorGoalsScreenState extends State<BehaviorGoalsScreen> {
                             createdAt: DateTime.now(),
                           );
 
+                          // تُلتقط قبل الانتظار لأن سياق الورقة ينتهي بإغلاقها.
+                          final navigator = Navigator.of(context);
+                          final messenger = ScaffoldMessenger.of(context);
+
                           final result = await _goalService.addGoal(goal);
-                          if (mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(result.message),
-                                backgroundColor: result.success ? lightGreen : Colors.red,
-                              ),
-                            );
-                            if (result.success) {
-                              _loadGoals(_selectedChild!.id);
-                            }
+
+                          navigator.pop();
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(result.message),
+                              backgroundColor:
+                                  result.success ? lightGreen : Colors.red,
+                            ),
+                          );
+                          if (result.success && mounted) {
+                            _loadGoals(_selectedChild!.id);
                           }
                         },
                         icon: const Icon(Icons.save),
