@@ -4,6 +4,7 @@ import '../utils/app_strings.dart';
 
 import '../models/zone_model.dart';
 import '../services/board_service.dart';
+import '../widgets/empty_state.dart';
 
 /// شاشة اختيار البورد المتغير المفعّل حالياً على الجهاز.
 /// الأهل يختارون أي منطقة متغيرة (حديقة الحيوانات / مدينة المهن ...)
@@ -75,8 +76,8 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppStrings.tr(context,
-              '✅ البورد المفعّل الآن: ${zone.name}',
-              '✅ Active board now: ${zone.name}')),
+              '✅ البورد المفعّل الآن: ${zone.displayName}',
+              '✅ Active board now: ${zone.displayName}')),
           backgroundColor: const Color(0xFF81C784),
           behavior: SnackBarBehavior.floating,
         ),
@@ -109,17 +110,14 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
   }
 
   Widget _buildEmpty() {
+    // قائمة قابلة للسحب حتى يبقى التحديث بالسحب متاحاً رغم الفراغ.
     return ListView(
       children: [
         const SizedBox(height: 120),
-        Icon(Icons.dashboard_customize_outlined,
-            size: 80, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Center(
-          child: Text(
-            AppStrings.tr(context, 'لا توجد بوردات متغيرة', 'No dynamic boards'),
-            style: TextStyle(fontSize: 18, color: ThemeColors.subtle(context)),
-          ),
+        EmptyState(
+          icon: Icons.dashboard_customize_outlined,
+          message: AppStrings.tr(
+              context, 'لا توجد بوردات متغيرة', 'No dynamic boards'),
         ),
       ],
     );
@@ -216,7 +214,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          zone.name,
+                          zone.displayName,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -263,7 +261,7 @@ class _BoardSelectionScreenState extends State<BoardSelectionScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              p.name,
+                              p.displayName,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: color.withOpacity(0.9),

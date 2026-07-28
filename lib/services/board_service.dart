@@ -1,106 +1,139 @@
+// Copyright © 2026 Fatima Azazmah. All rights reserved.
+// Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/zone_model.dart';
 import '../utils/app_strings.dart';
 
-/// خدمة إدارة المناطق (البوردات) — تركّز على البوردات المتغيرة
-/// التي يختار الأهل أيّها مفعّل على الجهاز حالياً.
+/// خدمة البوردات المتغيّرة: اللوح الذي يركّبه الأهل على اللعبة.
+/// يقرأ جهاز الرازبيري اللوح المفعّل من قاعدة البيانات قبل كل جلسة،
+/// فالتطبيق يكتب الاختيار ولا يتصل بالجهاز مباشرة.
 class BoardService {
+  // Singleton pattern
   static final BoardService _instance = BoardService._internal();
   factory BoardService() => _instance;
   BoardService._internal();
 
   SupabaseClient get _client => Supabase.instance.client;
 
-  /// جلب كل المناطق المتغيرة (is_dynamic = true) مع قطع كل منطقة.
-  /// المنطقة المفعّلة حالياً تكون is_active = true.
+  /// اسم دالة قاعدة البيانات التي تنقل التفعيل من لوح لآخر في عملية واحدة.
+  static const String _activateFunction = 'set_active_board';
+
+  /// المنطقة مع قطعها في استعلام واحد عبر العلاقة بينهما، بدل استعلام
+  /// منفصل لقطع كل منطقة.
+  static const String _boardColumns = '*, pieces(*)';
+
+  /// يجلب البوردات المتغيّرة التي يستطيع الأهل تبديلها، مع قطع كل لوح.
+  /// المفعّل حالياً هو الذي [Zone.isActive] فيه صحيحة.
   Future<List<Zone>> getDynamicBoards() async {
     try {
-      final zoneRows = await _client
+      final rows = await _client
           .from('zones')
-          .select()
+          .select(_boardColumns)
           .eq('is_dynamic', true)
           .order('id', ascending: true);
 
-      final zones = <Zone>[];
-      for (final row in (zoneRows as List<dynamic>)) {
-        final zoneMap = row as Map<String, dynamic>;
-        final zoneId = (zoneMap['id'] is num)
-            ? (zoneMap['id'] as num).toInt()
-            : int.tryParse('${zoneMap['id']}') ?? 0;
-
-        // قطع هذه المنطقة
-        final pieceRows = await _client
-            .from('pieces')
-            .select()
-            .eq('zone_id', zoneId)
-            .order('id', ascending: true);
-
-        final pieces = (pieceRows as List<dynamic>)
-            .map((p) => ZonePiece.fromSupabase(p as Map<String, dynamic>))
-            .toList();
-
-        zones.add(Zone.fromSupabase(zoneMap, pieces: pieces));
-      }
-      return zones;
+      return [
+        for (final row in rows as List<dynamic>)
+          if (row is Map) _boardFromSupabaseRow(Map<String, dynamic>.from(row)),
+      ];
     } catch (e) {
       print('[BoardService] getDynamicBoards error: $e');
       return [];
     }
   }
 
-  /// المنطقة المتغيرة المفعّلة حالياً (أو null إن لم توجد).
-  Future<Zone?> getActiveBoard() async {
-    try {
-      final row = await _client
-          .from('zones')
-          .select()
-          .eq('is_dynamic', true)
-          .eq('is_active', true)
-          .maybeSingle();
-      if (row == null) return null;
-      return Zone.fromSupabase(row as Map<String, dynamic>);
-    } catch (e) {
-      print('[BoardService] getActiveBoard error: $e');
-      return null;
-    }
-  }
-
-  /// تفعيل بورد معيّن (يُطفئ الباقي تلقائياً عبر دالة قاعدة البيانات).
-  /// الرازبيري ستقرأ is_active من Supabase وتتعامل على أساسه.
+  /// يفعّل اللوح المطابق لـ [zoneKey] ويُطفئ ما عداه.
+  ///
+  /// يتم عبر دالة في قاعدة البيانات لتصير العملية ذرّية: إمّا ينتقل
+  /// التفعيل كاملاً أو لا يتغيّر شيء، فلا يبقى الجهاز بلا لوح مفعّل.
   Future<BoardResult> setActiveBoard(String zoneKey) async {
     try {
       await _client.rpc(
-        'set_active_board',
+        _activateFunction,
         params: {'target_zone_key': zoneKey},
       );
-      return BoardResult(success: true, message: AppStrings.tr(null, 'تم تفعيل البورد بنجاح', 'Board activated successfully'));
+      return BoardResult(
+        success: true,
+        message: AppStrings.tr(
+          null,
+          'تم تفعيل البورد بنجاح',
+          'Board activated successfully',
+        ),
+      );
     } catch (e) {
       print('[BoardService] setActiveBoard error: $e');
-      // خطة بديلة: لو الدالة غير موجودة، نبدّل يدوياً
-      try {
-        await _client
-            .from('zones')
-            .update({'is_active': false})
-            .eq('is_dynamic', true);
-        await _client
-            .from('zones')
-            .update({'is_active': true})
-            .eq('key', zoneKey);
-        return BoardResult(success: true, message: AppStrings.tr(null, 'تم تفعيل البورد بنجاح', 'Board activated successfully'));
-      } catch (e2) {
-        print('[BoardService] setActiveBoard fallback error: $e2');
-        return BoardResult(
-          success: false,
-          message: AppStrings.tr(null, 'تعذّر تفعيل البورد، حاولي مرة أخرى',
-              'Could not activate the board, please try again'),
-        );
-      }
+      return BoardResult(
+        success: false,
+        message: AppStrings.tr(
+          null,
+          'تعذّر تفعيل البورد، حاولي مرة أخرى',
+          'Could not activate the board, please try again',
+        ),
+      );
     }
+  }
+
+  // ── قراءة صفوف Supabase ──
+
+  /// قراءة رقم صحيح قد يصل كعدد أو كنص.
+  static int _readInt(dynamic value, {int fallback = 0}) {
+    if (value is num) return value.toInt();
+    return int.tryParse('$value') ?? fallback;
+  }
+
+  /// مثل [_readInt] لكنها تُبقي القيمة فارغة إن لم تكن رقماً صالحاً.
+  static int? _readOptionalInt(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toInt();
+    return int.tryParse('$value');
+  }
+
+  /// قراءة نص، مع اعتبار القيمة الفارغة نصاً فارغاً.
+  static String _readText(dynamic value) => value?.toString() ?? '';
+
+  /// تحويل صف من جدول zones، مع قطعه المضمّنة في العلاقة، إلى [Zone].
+  Zone _boardFromSupabaseRow(Map<String, dynamic> row) {
+    final embedded = row['pieces'];
+    final pieces = <ZonePiece>[];
+
+    if (embedded is List) {
+      for (final piece in embedded) {
+        if (piece is Map) {
+          pieces.add(_pieceFromSupabaseRow(Map<String, dynamic>.from(piece)));
+        }
+      }
+      // العلاقة لا تضمن ترتيباً، ونرتّب هنا ليظهر اللوح بترتيب ثابت.
+      pieces.sort((a, b) => a.id.compareTo(b.id));
+    }
+
+    return Zone(
+      id: _readInt(row['id']),
+      key: _readText(row['key']),
+      nameAr: _readText(row['name_ar']),
+      nameEn: _readText(row['name_en']),
+      isDynamic: row['is_dynamic'] == true,
+      isActive: row['is_active'] == true,
+      pieces: pieces,
+    );
+  }
+
+  /// تحويل صف من جدول pieces إلى [ZonePiece].
+  ZonePiece _pieceFromSupabaseRow(Map<String, dynamic> row) {
+    return ZonePiece(
+      id: _readInt(row['id']),
+      zoneId: _readOptionalInt(row['zone_id']),
+      key: _readText(row['key']),
+      nameAr: _readText(row['name_ar']),
+      nameEn: _readText(row['name_en']),
+      sensorPin: _readOptionalInt(row['sensor_pin']),
+    );
   }
 }
 
+/// نتيجة محاولة تفعيل لوح، برسالة جاهزة للعرض بلغة التطبيق.
 class BoardResult {
   final bool success;
   final String message;
+
   BoardResult({required this.success, required this.message});
 }

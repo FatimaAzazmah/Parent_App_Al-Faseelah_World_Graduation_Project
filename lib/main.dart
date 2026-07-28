@@ -1,3 +1,5 @@
+// Copyright © 2026 Fatima Azazmah. All rights reserved.
+// Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'package:flutter/material.dart';
 import 'package:pearant_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -8,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_locale.dart';
 import 'app_theme.dart';
 import 'config/supabase_config.dart';
+import 'utils/app_strings.dart';
 
 // استيراد جميع الشاشات
 import 'screens/splash_screen.dart';
@@ -33,16 +36,72 @@ import 'screens/achievements_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase for authentication/profile handling.
-  // Credentials live in lib/config/supabase_config.dart (gitignored).
+  await AppLocale.loadSavedLocale();
+  await AppTheme.loadSavedTheme();
+
+  // بدون إعدادات الاتصال لا يمكن تشغيل أي شاشة، فنشرح الخطوة الناقصة
+  // لمن يشغّل المشروع أول مرة بدل تعطّل التطبيق برسالة غامضة.
+  if (!SupabaseConfig.isConfigured) {
+    runApp(const _MissingConfigApp());
+    return;
+  }
+
   await Supabase.initialize(
     url: SupabaseConfig.url,
     anonKey: SupabaseConfig.anonKey,
   );
 
-  await AppLocale.loadSavedLocale();
-  await AppTheme.loadSavedTheme();
   runApp(const AlFaseelahParentApp());
+}
+
+/// شاشة بديلة تظهر حين يُبنى التطبيق بلا إعدادات Supabase،
+/// وتدلّ على الأمر الصحيح لتشغيله.
+class _MissingConfigApp extends StatelessWidget {
+  const _MissingConfigApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.settings_ethernet, size: 64),
+              const SizedBox(height: 16),
+              Text(
+                AppStrings.tr(
+                  null,
+                  'إعدادات Supabase غير مضبوطة',
+                  'Supabase configuration is missing',
+                ),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                AppStrings.tr(
+                  null,
+                  'انسخي القالب التالي إلى local_config.dart واملئي قيمك:',
+                  'Copy this template to local_config.dart and fill in your values:',
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              const SelectableText(
+                'lib/config/local_config.example.dart',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontFamily: 'monospace'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class AlFaseelahParentApp extends StatelessWidget {

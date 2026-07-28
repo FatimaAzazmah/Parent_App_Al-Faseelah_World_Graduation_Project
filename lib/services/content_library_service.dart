@@ -1,8 +1,12 @@
+// Copyright © 2026 Fatima Azazmah. All rights reserved.
+// Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/content_item_model.dart';
 
-/// خدمة المحتوى الحقيقي (جدول content) + التفضيلات + المحفوظات + الإنجازات.
+/// خدمة مكتبة المحتوى: عناصر التعلّم التي يستطيع الأهل تصفّحها،
+/// ما يعلّمونه كمفضّل لكل طفل، تفضيلات الأنواع، وإنجازات الطفل.
 class ContentLibraryService {
+  // Singleton pattern
   static final ContentLibraryService _instance =
       ContentLibraryService._internal();
   factory ContentLibraryService() => _instance;
@@ -10,92 +14,67 @@ class ContentLibraryService {
 
   SupabaseClient get _client => Supabase.instance.client;
 
+  /// الأعمدة اللازمة لبناء [ContentItem] كاملاً، وفيها اسما المنطقة
+  /// والقطعة عبر العلاقات حتى لا نحتاج استعلامات إضافية لكل عنصر.
+  static const String _contentColumns =
+      '*, zones(name_ar,name_en), pieces(name_ar,name_en)';
+
   // ── المحتوى ──
 
-  /// جلب كل المحتوى الفعّال، مع أسماء المنطقة/القطعة (join).
-  /// إن مُرّر childId، تُعلّم العناصر المحفوظة لهذا الطفل.
-  Future<List<ContentItem>> getContent({
-    String? type,
-    String? childId,
-  }) async {
+  /// يجلب مكتبة المحتوى الفعّالة كاملة، ويعلّم فيها ما حفظه الأهل
+  /// للطفل المحدّد. تمرير [childId] فارغاً يعيد المكتبة بلا تعليم.
+  ///
+  /// تُشتقّ قائمة «المحفوظ» من هذه النتيجة بالترشيح محلياً، فيكفي
+  /// استعلامان لكل الشاشة بدل أربعة، ويستحيل أن يختلف التبويبان.
+  Future<List<ContentItem>> getLibraryForChild(String? childId) async {
     try {
-      var query = _client
+      final rows = await _client
           .from('content')
-          .select('*, zones(name_ar,name_en), pieces(name_ar,name_en)')
-          .eq('is_active', true);
+          .select(_contentColumns)
+          .eq('is_active', true)
+          .order('id', ascending: true);
 
-      if (type != null && type.isNotEmpty) {
-        query = query.eq('type', type);
-      }
+      final savedIds = await _savedContentIds(childId);
 
-      final rows = await query.order('id', ascending: true);
-
-      // مجموعة المحتوى المحفوظ لهذا الطفل
-      Set<int> savedIds = {};
-      if (childId != null && childId.isNotEmpty) {
-        savedIds = await _getSavedContentIds(childId);
-      }
-
-      return (rows as List<dynamic>).map((row) {
-        final map = row as Map<String, dynamic>;
-        final id = (map['id'] is num)
-            ? (map['id'] as num).toInt()
-            : int.tryParse('${map['id']}') ?? 0;
-        return ContentItem.fromSupabase(
-          map,
-          isSavedForChild: savedIds.contains(id),
-        );
-      }).toList();
+      return [
+        for (final row in rows as List<dynamic>)
+          if (row is Map)
+            _contentFromSupabaseRow(
+              Map<String, dynamic>.from(row),
+              isSavedForChild: savedIds.contains(_readInt(row['id'])),
+            ),
+      ];
     } catch (e) {
-      print('[ContentLibraryService] getContent error: $e');
+      print('[ContentLibraryService] getLibraryForChild error: $e');
       return [];
     }
   }
 
-  // ── المحتوى المحفوظ الخاص لكل طفل ──
+  // ── المحفوظات لكل طفل ──
 
-  Future<Set<int>> _getSavedContentIds(String childId) async {
+  /// معرّفات المحتوى الذي علّمه الأهل كمفضّل لهذا الطفل.
+  /// يعيد مجموعة فارغة إن لم يكن هناك طفل مختار.
+  Future<Set<int>> _savedContentIds(String? childId) async {
+    if (childId == null || childId.isEmpty) return <int>{};
+
     try {
       final rows = await _client
           .from('child_saved_content')
           .select('content_id')
           .eq('child_id', childId);
-      return (rows as List<dynamic>)
-          .map((r) => (r as Map<String, dynamic>)['content_id'])
-          .map((v) => (v is num) ? v.toInt() : int.tryParse('$v') ?? 0)
-          .toSet();
+
+      final ids = <int>{};
+      for (final row in rows as List<dynamic>) {
+        if (row is Map) ids.add(_readInt(row['content_id']));
+      }
+      return ids;
     } catch (e) {
-      print('[ContentLibraryService] _getSavedContentIds error: $e');
-      return {};
+      print('[ContentLibraryService] _savedContentIds error: $e');
+      return <int>{};
     }
   }
 
-  /// جلب المحتوى المحفوظ لطفل (العناصر الكاملة).
-  Future<List<ContentItem>> getSavedContent(String childId) async {
-    try {
-      // 1) معرّفات المحتوى المحفوظ لهذا الطفل
-      final savedIds = await _getSavedContentIds(childId);
-      if (savedIds.isEmpty) return [];
-
-      // 2) جلب صفوف المحتوى المطابقة مع أسماء المنطقة/القطعة
-      final rows = await _client
-          .from('content')
-          .select('*, zones(name_ar,name_en), pieces(name_ar,name_en)')
-          .inFilter('id', savedIds.toList());
-
-      return (rows as List<dynamic>)
-          .map((r) => ContentItem.fromSupabase(
-                Map<String, dynamic>.from(r as Map),
-                isSavedForChild: true,
-              ))
-          .toList();
-    } catch (e) {
-      print('[ContentLibraryService] getSavedContent error: $e');
-      return [];
-    }
-  }
-
-  /// حفظ محتوى لطفل.
+  /// يعلّم عنصراً كمفضّل لطفل، فتميل الفسيلة لتقديمه له أثناء اللعب.
   Future<bool> saveContentForChild(String childId, int contentId) async {
     try {
       await _client.from('child_saved_content').insert({
@@ -109,7 +88,7 @@ class ContentLibraryService {
     }
   }
 
-  /// إلغاء حفظ محتوى لطفل.
+  /// يزيل تعليم المفضّل عن عنصر لطفل.
   Future<bool> unsaveContentForChild(String childId, int contentId) async {
     try {
       await _client
@@ -124,9 +103,9 @@ class ContentLibraryService {
     }
   }
 
-  // ── التفضيلات العامة (parent_preferences) ──
+  // ── تفضيلات الأنواع ──
 
-  /// جلب الأنواع المفضّلة العامة لطفل.
+  /// أنواع المحتوى التي يفضّل الأهل أن تميل إليها جلسات الطفل.
   Future<List<String>> getPreferredTypes(String childId) async {
     try {
       final row = await _client
@@ -134,19 +113,22 @@ class ContentLibraryService {
           .select('preferred_types')
           .eq('child_id', childId)
           .maybeSingle();
-      if (row == null) return [];
-      final v = (row as Map<String, dynamic>)['preferred_types'];
-      if (v is List) return v.map((e) => e.toString()).toList();
-      return [];
+
+      final stored = row?['preferred_types'];
+      if (stored is! List) return [];
+
+      return [
+        for (final type in stored)
+          if (type != null) type.toString(),
+      ];
     } catch (e) {
       print('[ContentLibraryService] getPreferredTypes error: $e');
       return [];
     }
   }
 
-  /// حفظ الأنواع المفضّلة العامة لطفل (upsert).
-  Future<bool> setPreferredTypes(
-      String childId, List<String> types) async {
+  /// يحفظ الأنواع المفضّلة لطفل، ويستبدل ما كان محفوظاً له سابقاً.
+  Future<bool> setPreferredTypes(String childId, List<String> types) async {
     try {
       await _client.from('parent_preferences').upsert({
         'child_id': childId,
@@ -160,26 +142,10 @@ class ContentLibraryService {
     }
   }
 
-  // ── الإنجازات (achievements) ──
+  // ── الإنجازات ──
 
-  /// جلب مفاتيح الإنجازات المحقّقة لطفل (item_key المحقّقة).
-  Future<Set<String>> getAchievedKeys(String childId) async {
-    try {
-      final rows = await _client
-          .from('achievements')
-          .select('item_key')
-          .eq('child_id', childId);
-      return (rows as List<dynamic>)
-          .map((r) => (r as Map<String, dynamic>)['item_key']?.toString() ?? '')
-          .where((s) => s.isNotEmpty)
-          .toSet();
-    } catch (e) {
-      print('[ContentLibraryService] getAchievedKeys error: $e');
-      return {};
-    }
-  }
-
-  /// جلب الإنجازات مع تواريخها لطفل: item_key -> achieved_at.
+  /// إنجازات الطفل: مفتاح كل عنصر أتقنه مقابل تاريخ إتقانه.
+  /// مفاتيح الخريطة وحدها تكفي لمعرفة ما تحقّق دون تواريخه.
   Future<Map<String, DateTime>> getAchievementsWithDates(
       String childId) async {
     try {
@@ -187,21 +153,64 @@ class ContentLibraryService {
           .from('achievements')
           .select('item_key, achieved_at')
           .eq('child_id', childId);
-      final map = <String, DateTime>{};
-      for (final r in (rows as List<dynamic>)) {
-        final m = r as Map<String, dynamic>;
-        final key = m['item_key']?.toString();
-        if (key == null || key.isEmpty) continue;
-        final raw = m['achieved_at'];
-        final date = raw is String
-            ? (DateTime.tryParse(raw) ?? DateTime.now())
-            : DateTime.now();
-        map[key] = date;
+
+      final achieved = <String, DateTime>{};
+      for (final row in rows as List<dynamic>) {
+        if (row is! Map) continue;
+        final key = row['item_key']?.toString() ?? '';
+        if (key.isEmpty) continue;
+        achieved[key] = _readDate(row['achieved_at']);
       }
-      return map;
+      return achieved;
     } catch (e) {
       print('[ContentLibraryService] getAchievementsWithDates error: $e');
       return {};
     }
+  }
+
+  // ── قراءة صفوف Supabase ──
+
+  /// قراءة رقم صحيح قد يصل كعدد أو كنص.
+  static int _readInt(dynamic value, {int fallback = 0}) {
+    if (value is num) return value.toInt();
+    return int.tryParse('$value') ?? fallback;
+  }
+
+  /// قراءة تاريخ نصّي، مع اعتبار غير الصالح تاريخ اليوم.
+  static DateTime _readDate(dynamic value) {
+    if (value is DateTime) return value;
+    return DateTime.tryParse('$value') ?? DateTime.now();
+  }
+
+  /// قراءة اسم من كائن العلاقة القادم عبر join، إن وُجد.
+  static String? _readJoinedName(dynamic relation, String column) {
+    if (relation is! Map) return null;
+    return relation[column]?.toString();
+  }
+
+  /// تحويل صف من جدول content إلى [ContentItem].
+  /// [isSavedForChild] تُحسب خارج هذه الدالة لأنها تخصّ الطفل المختار
+  /// وليست جزءاً من الصف نفسه.
+  ContentItem _contentFromSupabaseRow(
+    Map<String, dynamic> row, {
+    bool isSavedForChild = false,
+  }) {
+    final rawCard = row['knowledge_card'];
+    final zone = row['zones'];
+    final piece = row['pieces'];
+
+    return ContentItem(
+      id: _readInt(row['id']),
+      type: row['type']?.toString() ?? 'learn',
+      difficulty: _readInt(row['difficulty'], fallback: 1),
+      knowledgeCard:
+          rawCard is Map ? Map<String, dynamic>.from(rawCard) : const {},
+      trackableKey: row['trackable_key']?.toString(),
+      zoneNameAr: _readJoinedName(zone, 'name_ar'),
+      zoneNameEn: _readJoinedName(zone, 'name_en'),
+      pieceNameAr: _readJoinedName(piece, 'name_ar'),
+      pieceNameEn: _readJoinedName(piece, 'name_en'),
+      isSavedForChild: isSavedForChild,
+    );
   }
 }

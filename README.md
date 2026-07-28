@@ -174,28 +174,57 @@ dynamic board.
 
 ### Run
 
+**1. Clone and install**
+
 ```bash
-git clone https://github.com/<your-username>/pearant-app.git
-cd pearant-app
+git clone https://github.com/FatimaAzazmah/Parent_App_Al-Faseelah_World_Graduation_Project.git
+cd Parent_App_Al-Faseelah_World_Graduation_Project
 flutter pub get
+```
+
+**2. Configure Supabase** — no project-specific values live in this repository. Copy the
+template and fill in your own **Project URL** and **publishable / anon key** from
+*Supabase Dashboard → Settings → API*:
+
+```bash
+cp lib/config/local_config.example.dart lib/config/local_config.dart
+```
+
+`local_config.dart` is gitignored and is never committed.
+
+**3. Run**
+
+```bash
 flutter run
 ```
 
-### Configure Supabase
-Credentials are kept **out of version control**. Copy the example config and fill in
-your own values:
+For release builds and CI, the same values can be supplied at build time instead —
+these take priority over the local file:
 
 ```bash
-cp lib/config/supabase_config.example.dart lib/config/supabase_config.dart
+flutter run --dart-define-from-file=env.json
 ```
 
-Then open `lib/config/supabase_config.dart` and set your **Project URL** and
-**publishable / anon key** (*Supabase Dashboard → Settings → API*). This file is
-gitignored and never committed.
+Building with neither source configured shows a screen naming the missing step rather
+than failing with an obscure error.
 
-> 🔒 **Security note:** the app uses only the **public anon / publishable key**, whose
-> access is restricted by **Row Level Security (RLS)** policies in the database. The
-> **secret / `service_role`** key is never used in the client nor committed to this repo.
+> 🔒 **Security note:** the app uses only the **public anon / publishable key**, which is
+> designed to ship inside client apps — data access is restricted by **Row Level
+> Security (RLS)** policies in the database. The **secret / `service_role`** key is never
+> used in the client nor committed to this repository.
+
+---
+
+## Authorship
+
+The Flutter parent application was designed and developed by **Fatima Azazmah**,
+including the application architecture, the Supabase service layer, the
+authentication system, the localisation and theming systems, the shared UI
+components, the BLE integration, and the application screens.
+
+## License
+
+See [COPYRIGHT](COPYRIGHT). All rights reserved.
 
 ---
 

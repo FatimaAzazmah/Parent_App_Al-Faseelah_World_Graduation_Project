@@ -1,18 +1,40 @@
-import '../app_locale.dart';
+import '../utils/app_strings.dart';
 
-bool get _isEn => AppLocale.notifier.value.languageCode == 'en';
+/// يوحّد اختيار الاسم المعروض في كل نموذج يحمل اسماً بلغتين.
+/// الصنف المستعمِل يوفّر [nameAr] و [nameEn] فقط، ويرث بقية المنطق.
+mixin BilingualName {
+  /// الاسم العربي كما هو مخزّن في قاعدة البيانات.
+  String get nameAr;
 
-/// يمثّل منطقة (بورد) من جدول zones في Supabase.
-class Zone {
+  /// الاسم الإنجليزي كما هو مخزّن في قاعدة البيانات.
+  String get nameEn;
+
+  /// الاسم حسب لغة التطبيق الحالية.
+  /// إن كان اسم اللغة المختارة فارغاً يُعرض اسم اللغة الأخرى بدل فراغ.
+  String get displayName => AppStrings.localized(nameAr, nameEn) ?? '';
+}
+
+/// منطقة لعب (بورد) من جدول zones.
+/// بيانات صرفة؛ قراءة صفوف Supabase مسؤولية BoardService.
+class Zone with BilingualName {
   final int id;
+
+  /// المفتاح النصي الثابت للمنطقة (home / mosque / zoo ...).
   final String key;
+
+  @override
   final String nameAr;
+
+  @override
   final String nameEn;
-  final String goalsAr;
+
+  /// المناطق المتغيّرة وحدها يمكن للأهل تبديلها من التطبيق.
   final bool isDynamic;
+
+  /// المنطقة الموضوعة حالياً على الجهاز.
   final bool isActive;
 
-  /// القطع التابعة لهذه المنطقة (تُحمّل اختيارياً من جدول pieces).
+  /// قطع هذه المنطقة؛ تبقى فارغة ما لم تُحمَّل معها.
   final List<ZonePiece> pieces;
 
   const Zone({
@@ -20,62 +42,43 @@ class Zone {
     required this.key,
     required this.nameAr,
     required this.nameEn,
-    this.goalsAr = '',
     this.isDynamic = false,
     this.isActive = false,
     this.pieces = const [],
   });
 
-  factory Zone.fromSupabase(
-    Map<String, dynamic> row, {
-    List<ZonePiece> pieces = const [],
-  }) {
-    return Zone(
-      id: (row['id'] is num)
-          ? (row['id'] as num).toInt()
-          : int.tryParse('${row['id']}') ?? 0,
-      key: row['key']?.toString() ?? '',
-      nameAr: row['name_ar']?.toString() ?? '',
-      nameEn: row['name_en']?.toString() ?? '',
-      goalsAr: row['goals_ar']?.toString() ?? '',
-      isDynamic: row['is_dynamic'] == true,
-      isActive: row['is_active'] == true,
-      pieces: pieces,
-    );
-  }
-
+  /// نسخة محدَّثة تُستعمل لتبديل حالة التفعيل محلياً بعد نجاح العملية،
+  /// بدل إعادة تحميل القائمة كاملة من الخادم.
   Zone copyWith({bool? isActive, List<ZonePiece>? pieces}) {
     return Zone(
       id: id,
       key: key,
       nameAr: nameAr,
       nameEn: nameEn,
-      goalsAr: goalsAr,
       isDynamic: isDynamic,
       isActive: isActive ?? this.isActive,
       pieces: pieces ?? this.pieces,
     );
   }
-
-  /// اسم المنطقة حسب لغة التطبيق.
-  String get name =>
-      _isEn ? (nameEn.isNotEmpty ? nameEn : nameAr) : nameAr;
-
-  /// أهداف المنطقة كقائمة (goals_ar مفصولة بفواصل عربية).
-  List<String> get goalsList => goalsAr
-      .split(RegExp(r'[،,]'))
-      .map((s) => s.trim())
-      .where((s) => s.isNotEmpty)
-      .toList();
 }
 
-/// قطعة داخل منطقة (من جدول pieces).
-class ZonePiece {
+/// قطعة لعب تتبع منطقة، من جدول pieces.
+class ZonePiece with BilingualName {
   final int id;
+
+  /// المنطقة التي تتبع لها القطعة؛ قد تكون غير محدّدة.
   final int? zoneId;
+
+  /// المفتاح النصي الثابت للقطعة.
   final String key;
+
+  @override
   final String nameAr;
+
+  @override
   final String nameEn;
+
+  /// منفذ الحسّاس الذي يلتقط القطعة على اللوح؛ يقرأه جهاز الرازبيري.
   final int? sensorPin;
 
   const ZonePiece({
@@ -86,25 +89,4 @@ class ZonePiece {
     required this.nameEn,
     this.sensorPin,
   });
-
-  /// اسم القطعة حسب لغة التطبيق.
-  String get name =>
-      _isEn ? (nameEn.isNotEmpty ? nameEn : nameAr) : nameAr;
-
-  factory ZonePiece.fromSupabase(Map<String, dynamic> row) {
-    return ZonePiece(
-      id: (row['id'] is num)
-          ? (row['id'] as num).toInt()
-          : int.tryParse('${row['id']}') ?? 0,
-      zoneId: (row['zone_id'] is num)
-          ? (row['zone_id'] as num).toInt()
-          : int.tryParse('${row['zone_id']}'),
-      key: row['key']?.toString() ?? '',
-      nameAr: row['name_ar']?.toString() ?? '',
-      nameEn: row['name_en']?.toString() ?? '',
-      sensorPin: (row['sensor_pin'] is num)
-          ? (row['sensor_pin'] as num).toInt()
-          : int.tryParse('${row['sensor_pin']}'),
-    );
-  }
 }

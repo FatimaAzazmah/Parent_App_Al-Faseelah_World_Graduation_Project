@@ -1,3 +1,5 @@
+// Copyright © 2026 Fatima Azazmah. All rights reserved.
+// Al-Faseelah World — Parent App. Unauthorised reuse is prohibited.
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/app_strings.dart';
 import '../models/behavior_goal_model.dart';

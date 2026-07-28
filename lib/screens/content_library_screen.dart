@@ -6,6 +6,11 @@ import '../models/child_model.dart';
 import '../models/content_item_model.dart';
 import '../services/child_service.dart';
 import '../services/content_library_service.dart';
+import '../widgets/child_selector_bar.dart';
+import '../widgets/difficulty_dots.dart';
+import '../widgets/empty_state.dart';
+import '../widgets/labelled_chip_group.dart';
+import '../widgets/tag_pill.dart';
 
 /// شاشة المحتوى المطوّرة:
 ///  • تصفّح المحتوى الحقيقي من جدول content
@@ -31,8 +36,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
   Child? _selectedChild;
 
   List<ContentItem> _allContent = [];
-  List<ContentItem> _savedContent = [];
   List<String> _preferredTypes = [];
+
+  /// المحفوظ مشتقّ من المكتبة نفسها، فيبقى التبويبان متطابقين دائماً
+  /// ويتحدّث تبويب «المحفوظ» فور الحفظ بلا إعادة جلب.
+  List<ContentItem> get _savedContent =>
+      _allContent.where((c) => c.isSavedForChild).toList();
 
   String _selectedType = 'all';
   bool _isLoading = true;
@@ -72,18 +81,14 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
     setState(() => _isLoading = true);
     final childId = _selectedChild?.id;
 
-    final content = await _service.getContent(childId: childId);
-    List<ContentItem> saved = [];
-    List<String> prefs = [];
-    if (childId != null) {
-      saved = await _service.getSavedContent(childId);
-      prefs = await _service.getPreferredTypes(childId);
-    }
+    final content = await _service.getLibraryForChild(childId);
+    final prefs = childId == null
+        ? <String>[]
+        : await _service.getPreferredTypes(childId);
 
     if (mounted) {
       setState(() {
         _allContent = content;
-        _savedContent = saved;
         _preferredTypes = prefs;
         _isLoading = false;
       });
@@ -165,44 +170,14 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
       );
     }
 
-    return Container(
-      color: ThemeColors.surface(context),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Row(
-        children: [
-          const Icon(Icons.child_care, size: 20, color: Color(0xFF87CEEB)),
-          const SizedBox(width: 8),
-          Text(AppStrings.tr(context, 'الطفل:', 'Child:'),
-              style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _children.length,
-                itemBuilder: (context, i) {
-                  final child = _children[i];
-                  final selected = child.id == _selectedChild?.id;
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: ChoiceChip(
-                      selected: selected,
-                      label: Text('${child.avatar} ${child.displayName}'),
-                      onSelected: (_) async {
-                        setState(() => _selectedChild = child);
-                        await _loadForChild();
-                      },
-                      selectedColor:
-                          const Color(0xFF87CEEB).withOpacity(0.25),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ChildSelectorBar(
+      children: _children,
+      selectedChildId: _selectedChild?.id,
+      label: AppStrings.tr(context, 'الطفل:', 'Child:'),
+      onChildSelected: (child) async {
+        setState(() => _selectedChild = child);
+        await _loadForChild();
+      },
     );
   }
 
@@ -467,12 +442,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        _pill(t.label(context), t.color),
+                        TagPill(text: t.label(context), color: t.color),
                         const SizedBox(width: 6),
                         if (item.zoneName != null)
-                          _pill(item.zoneName!, Colors.grey.shade500),
+                          TagPill(text: item.zoneName!, color: Colors.grey.shade500),
                         const SizedBox(width: 6),
-                        _difficultyDots(item.difficulty),
+                        DifficultyDots(level: item.difficulty),
                       ],
                     ),
                   ],
@@ -505,8 +480,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
     // تحديث فوري للواجهة
     setState(() {
       _allContent = _allContent
-          .map((c) =>
-              c.id == item.id ? c.copyWith(isSavedForChild: nowSaved) : c)
+          .map((c) => c.id == item.id ? c.withSavedState(nowSaved) : c)
           .toList();
     });
 
@@ -519,9 +493,6 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
 
     if (!mounted) return;
     if (ok) {
-      // حدّث قائمة المحفوظ
-      final saved = await _service.getSavedContent(child.id);
-      if (mounted) setState(() => _savedContent = saved);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(nowSaved
@@ -537,9 +508,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
       // تراجع عند الفشل
       setState(() {
         _allContent = _allContent
-            .map((c) => c.id == item.id
-                ? c.copyWith(isSavedForChild: !nowSaved)
-                : c)
+            .map((c) => c.id == item.id ? c.withSavedState(!nowSaved) : c)
             .toList();
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -607,7 +576,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold)),
                       ),
-                      _pill(t.label(context), t.color),
+                      TagPill(text: t.label(context), color: t.color),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -621,7 +590,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                         const SizedBox(width: 12),
                       ],
                       Text(AppStrings.tr(context, 'الصعوبة: ', 'Difficulty: ')),
-                      _difficultyDots(item.difficulty),
+                      DifficultyDots(level: item.difficulty),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -637,15 +606,21 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
                             color: ThemeColors.text(context))),
                     const SizedBox(height: 16),
                   ],
-                  if (item.vocabulary.isNotEmpty)
-                    _chipSection(AppStrings.tr(context, 'المفردات', 'Vocabulary'),
-                        item.vocabulary, t.color),
-                  if (item.facts.isNotEmpty)
-                    _chipSection(AppStrings.tr(context, 'حقائق', 'Facts'),
-                        item.facts, const Color(0xFF4DD0E1)),
-                  if (item.values.isNotEmpty)
-                    _chipSection(AppStrings.tr(context, 'القيم', 'Values'),
-                        item.values, const Color(0xFF81C784)),
+                  LabelledChipGroup(
+                    title: AppStrings.tr(context, 'المفردات', 'Vocabulary'),
+                    items: item.vocabulary,
+                    color: t.color,
+                  ),
+                  LabelledChipGroup(
+                    title: AppStrings.tr(context, 'حقائق', 'Facts'),
+                    items: item.facts,
+                    color: const Color(0xFF4DD0E1),
+                  ),
+                  LabelledChipGroup(
+                    title: AppStrings.tr(context, 'القيم', 'Values'),
+                    items: item.values,
+                    color: const Color(0xFF81C784),
+                  ),
                   const SizedBox(height: 8),
                   if (_selectedChild != null)
                     SizedBox(
@@ -684,74 +659,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen>
     );
   }
 
-  // ── عناصر مساعدة للواجهة ──
-  Widget _pill(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(text,
-          style: TextStyle(
-              fontSize: 11, color: color, fontWeight: FontWeight.w600)),
-    );
-  }
-
-  Widget _difficultyDots(int difficulty) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (i) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 2),
-          child: Icon(
-            Icons.circle,
-            size: 8,
-            color: i < difficulty
-                ? const Color(0xFFFFB74D)
-                : Colors.grey.shade300,
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _chipSection(String title, List<String> items, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: items
-              .map((s) => Chip(
-                    label: Text(s, style: const TextStyle(fontSize: 12)),
-                    backgroundColor: color.withOpacity(0.12),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ))
-              .toList(),
-        ),
-        const SizedBox(height: 14),
-      ],
-    );
-  }
-
   Widget _buildEmpty(String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inbox_outlined, size: 72, color: Colors.grey[400]),
-          const SizedBox(height: 12),
-          Text(message,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: ThemeColors.subtle(context))),
-        ],
-      ),
-    );
+    return EmptyState(icon: Icons.inbox_outlined, message: message);
   }
 }
 

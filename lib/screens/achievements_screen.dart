@@ -5,6 +5,8 @@ import '../utils/app_strings.dart';
 import '../models/child_model.dart';
 import '../services/child_service.dart';
 import '../services/content_library_service.dart';
+import '../widgets/child_selector_bar.dart';
+import '../widgets/empty_state.dart';
 
 /// شاشة الإنجازات: تعرض لكل طفل ما تحقّق (achievements) مقابل ما هو متاح
 /// للتتبع (content.trackable_key)، مجمّعاً حسب الفئة.
@@ -58,7 +60,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     setState(() => _isLoading = true);
 
     // مفاتيح التتبع من المحتوى (نجمعها من كل المحتوى الفعّال)
-    final content = await _service.getContent();
+    final content = await _service.getLibraryForChild(null);
     final byCat = <String, List<_Trackable>>{};
     final seen = <String>{};
     for (final c in content) {
@@ -120,43 +122,13 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   }
 
   Widget _buildChildSelector() {
-    if (_children.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    return Container(
-      color: ThemeColors.surface(context),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Row(
-        children: [
-          const Icon(Icons.child_care, size: 20, color: Color(0xFF87CEEB)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _children.length,
-                itemBuilder: (context, i) {
-                  final child = _children[i];
-                  final selected = child.id == _selectedChild?.id;
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: ChoiceChip(
-                      selected: selected,
-                      label: Text('${child.avatar} ${child.displayName}'),
-                      onSelected: (_) async {
-                        setState(() => _selectedChild = child);
-                        await _load();
-                      },
-                      selectedColor: const Color(0xFF87CEEB).withOpacity(0.25),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ChildSelectorBar(
+      children: _children,
+      selectedChildId: _selectedChild?.id,
+      onChildSelected: (child) async {
+        setState(() => _selectedChild = child);
+        await _load();
+      },
     );
   }
 
@@ -302,18 +274,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       '${d.day}/${d.month}/${d.year}';
 
   Widget _empty(String msg) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.emoji_events_outlined, size: 72, color: Colors.grey[400]),
-          const SizedBox(height: 12),
-          Text(msg,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: ThemeColors.subtle(context))),
-        ],
-      ),
-    );
+    return EmptyState(icon: Icons.emoji_events_outlined, message: msg);
   }
 }
 

@@ -44,5 +44,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local Supabase credentials — copy from supabase_config.example.dart
-/lib/config/supabase_config.dart
+# Local Supabase configuration — never commit these
+# copy from lib/config/local_config.example.dart
+/lib/config/local_config.dart
+# optional: values passed via --dart-define-from-file
+/env.json

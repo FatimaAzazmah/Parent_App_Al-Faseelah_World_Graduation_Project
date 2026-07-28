@@ -1,38 +1,43 @@
-import '../app_locale.dart';
+import '../utils/app_strings.dart';
 
-/// يمثّل صفاً من جدول content الحقيقي في Supabase.
-/// المحتوى الفعلي مخزّن في knowledge_card (jsonb).
-/// Getters are locale-aware: they prefer the `_en` variants of
-/// knowledge_card fields when the app language is English, and fall
-/// back to Arabic when the English text is not available yet.
+/// عنصر تعليمي واحد من جدول content.
+///
+/// مادة العنصر نفسها مخزّنة في العمود knowledge_card (jsonb) بمفاتيح
+/// ثنائية اللغة تتبع اصطلاح `<اسم>_ar` و `<اسم>_en`. كل القراءات هنا
+/// تحترم لغة التطبيق الحالية وترجع للّغة الأخرى إن نقصت الترجمة، حتى لا
+/// تظهر بطاقة فارغة للأهل.
+///
+/// بيانات صرفة؛ قراءة صفوف Supabase مسؤولية ContentLibraryService.
 class ContentItem {
   final int id;
-  final int? zoneId;
-  final int? pieceId;
-  final String type; // learn | play | story | values | challenge
-  final int difficulty; // 1..3
-  final Map<String, dynamic> knowledgeCard;
-  final String? trackableKey;
-  final bool isActive;
 
-  // أسماء مُحمّلة عبر join (اختياري)
+  /// نوع العنصر: learn أو play أو story أو values أو challenge.
+  final String type;
+
+  /// مستوى الصعوبة 1..3، ويحدّد أي مستوى معلومات يُعرض.
+  final int difficulty;
+
+  /// مادة العنصر كما وصلت من العمود jsonb.
+  final Map<String, dynamic> knowledgeCard;
+
+  /// المفتاح الذي يربط العنصر بشاشة الإنجازات، إن كان قابلاً للتتبع.
+  final String? trackableKey;
+
+  // أسماء تصل عبر join مع جدولي zones و pieces
   final String? zoneNameAr;
   final String? zoneNameEn;
   final String? pieceNameAr;
   final String? pieceNameEn;
 
-  // هل هذا المحتوى محفوظ للطفل المحدد حالياً؟ (يُحسب في الطبقة الأعلى)
+  /// تُحسب في طبقة الخدمة حسب الطفل المختار حالياً.
   final bool isSavedForChild;
 
   const ContentItem({
     required this.id,
-    this.zoneId,
-    this.pieceId,
     required this.type,
     this.difficulty = 1,
     this.knowledgeCard = const {},
     this.trackableKey,
-    this.isActive = true,
     this.zoneNameAr,
     this.zoneNameEn,
     this.pieceNameAr,
@@ -40,186 +45,108 @@ class ContentItem {
     this.isSavedForChild = false,
   });
 
-  factory ContentItem.fromSupabase(
-    Map<String, dynamic> row, {
-    bool isSavedForChild = false,
-  }) {
-    // knowledge_card قد يأتي كـ Map مباشرة (jsonb) أو كنص JSON
-    final rawCard = row['knowledge_card'];
-    Map<String, dynamic> card = {};
-    if (rawCard is Map) {
-      card = Map<String, dynamic>.from(rawCard);
-    }
-
-    // zone/piece قد تأتي كـ nested object من join
-    String? zoneAr;
-    String? zoneEn;
-    String? pieceAr;
-    String? pieceEn;
-    final zoneObj = row['zones'];
-    if (zoneObj is Map) {
-      zoneAr = zoneObj['name_ar']?.toString();
-      zoneEn = zoneObj['name_en']?.toString();
-    }
-    final pieceObj = row['pieces'];
-    if (pieceObj is Map) {
-      pieceAr = pieceObj['name_ar']?.toString();
-      pieceEn = pieceObj['name_en']?.toString();
-    }
-
-    return ContentItem(
-      id: (row['id'] is num)
-          ? (row['id'] as num).toInt()
-          : int.tryParse('${row['id']}') ?? 0,
-      zoneId: (row['zone_id'] is num)
-          ? (row['zone_id'] as num).toInt()
-          : int.tryParse('${row['zone_id']}'),
-      pieceId: (row['piece_id'] is num)
-          ? (row['piece_id'] as num).toInt()
-          : int.tryParse('${row['piece_id']}'),
-      type: row['type']?.toString() ?? 'learn',
-      difficulty: (row['difficulty'] is num)
-          ? (row['difficulty'] as num).toInt()
-          : int.tryParse('${row['difficulty']}') ?? 1,
-      knowledgeCard: card,
-      trackableKey: row['trackable_key']?.toString(),
-      isActive: row['is_active'] != false,
-      zoneNameAr: zoneAr,
-      zoneNameEn: zoneEn,
-      pieceNameAr: pieceAr,
-      pieceNameEn: pieceEn,
-      isSavedForChild: isSavedForChild,
-    );
-  }
-
-  ContentItem copyWith({bool? isSavedForChild}) {
+  /// نسخة محدَّثة بحالة حفظ جديدة، تُستعمل لتحديث الواجهة فور ضغط الأهل
+  /// قبل وصول تأكيد الخادم. حالة الحفظ هي الحقل الوحيد المتغيّر بعد الجلب.
+  ContentItem withSavedState(bool saved) {
     return ContentItem(
       id: id,
-      zoneId: zoneId,
-      pieceId: pieceId,
       type: type,
       difficulty: difficulty,
       knowledgeCard: knowledgeCard,
       trackableKey: trackableKey,
-      isActive: isActive,
       zoneNameAr: zoneNameAr,
       zoneNameEn: zoneNameEn,
       pieceNameAr: pieceNameAr,
       pieceNameEn: pieceNameEn,
-      isSavedForChild: isSavedForChild ?? this.isSavedForChild,
+      isSavedForChild: saved,
     );
   }
 
-  // ── قراءات مساعدة من knowledge_card (حسب لغة التطبيق) ──
+  // ── الأسماء المرتبطة (من الـ join) ──
 
-  static bool get _isEn => AppLocale.notifier.value.languageCode == 'en';
+  /// اسم المنطقة التي ينتمي لها العنصر، بلغة التطبيق.
+  String? get zoneName => AppStrings.localized(zoneNameAr, zoneNameEn);
 
-  String? _first(List<String> keys) {
-    for (final k in keys) {
-      final v = knowledgeCard[k];
-      if (v != null && v.toString().trim().isNotEmpty) return v.toString();
+  /// اسم القطعة التي يشرحها العنصر، بلغة التطبيق.
+  String? get pieceName => AppStrings.localized(pieceNameAr, pieceNameEn);
+
+  // ── قراءة knowledge_card ──
+
+  /// قيمة مفتاح واحد كنصّ منظّف، أو null إن كان غائباً أو فارغاً.
+  String? _rawText(String key) {
+    final value = knowledgeCard[key];
+    if (value == null) return null;
+    final text = value.toString().trim();
+    return text.isEmpty ? null : text;
+  }
+
+  /// يبحث عن نصّ حسب اصطلاح التسمية: لكل اسم أساسي يجرّب نسخة اللغة
+  /// الحالية، ثم المفتاح المجرّد، ثم نسخة اللغة المقابلة، قبل الانتقال
+  /// للاسم التالي. هكذا يُكتب منطق البحث مرة واحدة بدل تكراره في كل حقل.
+  String? _localizedText(List<String> baseKeys) {
+    for (final base in baseKeys) {
+      final text = _rawText('${base}_${AppStrings.langSuffix}') ??
+          _rawText(base) ??
+          _rawText('${base}_${AppStrings.otherLangSuffix}');
+      if (text != null) return text;
     }
     return null;
   }
 
-  /// اسم المنطقة حسب لغة التطبيق.
-  String? get zoneName =>
-      _isEn ? (zoneNameEn ?? zoneNameAr) : (zoneNameAr ?? zoneNameEn);
-
-  /// اسم القطعة حسب لغة التطبيق.
-  String? get pieceName =>
-      _isEn ? (pieceNameEn ?? pieceNameAr) : (pieceNameAr ?? pieceNameEn);
-
-  /// العنوان: النسخة المطابقة للغة أولاً، ثم العناوين العامة، ثم اسم القطعة.
-  String get title {
-    final localized = _isEn
-        ? _first(['title_en', 'name_en'])
-        : _first(['title_ar', 'name_ar', 'العنوان']);
-    return localized ??
-        _first(['title', 'name']) ??
-        _first(['title_ar', 'name_ar', 'title_en', 'name_en']) ??
-        pieceName ??
-        typeLabel;
+  /// نصّ عنصر داخل قائمة: إمّا نصّ مباشر أو خريطة {ar, en}.
+  String? _entryText(dynamic entry) {
+    if (entry is Map) {
+      return AppStrings.localized(
+        entry['ar']?.toString(),
+        entry['en']?.toString(),
+      );
+    }
+    final text = entry?.toString().trim();
+    return (text == null || text.isEmpty) ? null : text;
   }
 
-  /// وصف مختصر إن وُجد.
-  String get summary {
-    final localized = _isEn
-        ? _first(['summary_en', 'description_en'])
-        : _first(['summary_ar', 'الوصف', 'ملخص']);
-    return localized ?? _first(['summary', 'description']) ?? '';
-  }
-
-  /// النص الكامل (قصة/شرح) حسب اللغة، مع الرجوع للغة الأخرى إن لم يتوفر.
-  String get storyText {
-    final localized = _isEn
-        ? _first(['story_en', 'text_en', 'body_en'])
-        : _first(['story_ar', 'text_ar', 'النص', 'القصة']);
-    return localized ??
-        _first(['story', 'text', 'body']) ??
-        (_isEn
-                ? _first(['story_ar', 'text_ar'])
-                : _first(['story_en', 'text_en'])) ??
-        summary;
-  }
-
-  /// قائمة ثنائية اللغة: عناصرها إمّا نصوص أو خرائط {ar, en}.
-  List<String> _biList(String key) {
-    final v = knowledgeCard[key];
-    if (v is! List) return const [];
-    final out = <String>[];
-    for (final e in v) {
-      if (e is Map) {
-        final s = _isEn ? (e['en'] ?? e['ar']) : (e['ar'] ?? e['en']);
-        if (s != null && s.toString().trim().isNotEmpty) {
-          out.add(s.toString());
-        }
-      } else if (e != null && e.toString().trim().isNotEmpty) {
-        out.add(e.toString());
+  /// يجمع قائمة نصوص من knowledge_card بنفس اصطلاح [_localizedText]،
+  /// ويضمّ ما يجده تحت كل اسم أساسي في قائمة واحدة.
+  List<String> _localizedList(List<String> baseKeys) {
+    final collected = <String>[];
+    for (final base in baseKeys) {
+      final raw = knowledgeCard['${base}_${AppStrings.langSuffix}'] ??
+          knowledgeCard[base] ??
+          knowledgeCard['${base}_${AppStrings.otherLangSuffix}'];
+      if (raw is! List) continue;
+      for (final entry in raw) {
+        final text = _entryText(entry);
+        if (text != null) collected.add(text);
       }
     }
-    return out;
+    return collected;
   }
 
-  List<String> get vocabulary => [
-        ..._biList('vocab'),
-        ..._biList('vocabulary'),
-        ..._biList('مفردات'),
-      ];
+  // ── الحقول المعروضة ──
 
-  List<String> get facts => [
-        ..._biList('facts'),
-        ..._biList('facts_l1'),
-        ..._biList('حقائق'),
-      ];
+  /// عنوان العنصر، ويسقط على اسم القطعة إن لم يُسجَّل له عنوان.
+  /// النصّ الفارغ متروك للشاشة لتعرض بديلاً مترجَماً.
+  String get title =>
+      _localizedText(const ['title', 'name', 'العنوان']) ?? pieceName ?? '';
 
-  List<String> get values => [
-        ..._biList('values'),
-        ..._biList('قيم'),
-      ];
+  /// وصف مختصر للعنصر إن وُجد.
+  String get summary =>
+      _localizedText(const ['summary', 'description', 'الوصف', 'ملخص']) ?? '';
 
-  /// تسمية النوع حسب لغة التطبيق.
-  String get typeLabel {
-    switch (type) {
-      case 'story':
-        return _isEn ? 'Story' : 'قصة';
-      case 'play':
-        return _isEn ? 'Game' : 'لعبة';
-      case 'learn':
-        return _isEn ? 'Educational' : 'تعليمي';
-      case 'values':
-        return _isEn ? 'Values' : 'قيم';
-      case 'challenge':
-        return _isEn ? 'Challenge' : 'تحدي';
-      default:
-        return type;
-    }
-  }
+  /// النصّ الكامل للقصة أو الشرح، ويسقط على الوصف المختصر.
+  String get storyText =>
+      _localizedText(const ['story', 'text', 'body', 'النص', 'القصة']) ??
+      summary;
 
-  /// (متروكة للتوافق مع كود أقدم)
-  String get typeLabelAr => typeLabel;
+  /// المفردات التي يعلّمها العنصر.
+  List<String> get vocabulary =>
+      _localizedList(const ['vocab', 'vocabulary', 'مفردات']);
 
-  /// هل هذا النوع "مهمة" قابلة للإنجاز (تظهر خانة "تمت")؟
-  /// الألعاب (play) تُلعب ولا "تُنجز".
-  bool get isTask => type != 'play';
+  /// المعلومات المعروضة، مأخوذة من المستوى المطابق لصعوبة العنصر أولاً
+  /// حتى يتلقّى الطفل معلومات بمستواه، مع التدرّج للأبسط عند غيابه.
+  List<String> get facts =>
+      _localizedList(['facts_l$difficulty', 'facts_l1', 'facts', 'حقائق']);
+
+  /// القيم التربوية المرتبطة بالعنصر.
+  List<String> get values => _localizedList(const ['values', 'قيم']);
 }

@@ -26,6 +26,28 @@ class AppStrings {
     return Localizations.localeOf(context).languageCode == 'ar';
   }
 
+  /// لاحقة اللغة الحالية كما تظهر في مفاتيح قاعدة البيانات (`_ar` / `_en`).
+  static String get langSuffix =>
+      AppLocale.notifier.value.languageCode == 'en' ? 'en' : 'ar';
+
+  /// لاحقة اللغة المقابلة، تُستعمل للرجوع إليها عند نقص الترجمة.
+  static String get otherLangSuffix => langSuffix == 'en' ? 'ar' : 'en';
+
+  /// يختار بين نسختين من نصّ بيانات (لا نصّ واجهة) حسب اللغة الحالية،
+  /// ويرجع للّغة الأخرى إن كانت النسخة المفضّلة فارغة.
+  /// يعيد null إن كانت النسختان فارغتين، ليقرّر المستدعي ماذا يعرض.
+  static String? localized(String? ar, String? en) {
+    final arabic = ar?.trim() ?? '';
+    final english = en?.trim() ?? '';
+    final wantsEnglish = langSuffix == 'en';
+
+    final preferred = wantsEnglish ? english : arabic;
+    if (preferred.isNotEmpty) return preferred;
+
+    final fallback = wantsEnglish ? arabic : english;
+    return fallback.isEmpty ? null : fallback;
+  }
+
   static String _t(BuildContext context, String ar, String en) =>
       tr(context, ar, en);
 
