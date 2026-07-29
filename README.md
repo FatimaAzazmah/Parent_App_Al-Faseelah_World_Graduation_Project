@@ -226,7 +226,7 @@ components, the BLE integration, and the application screens.
 
 ## 👩‍💻 Author & Credits
 
-**Fatima Azazmah** & Rawaa Hammad — *B.Sc. Computer Science, Birzeit University (2026)*
+**Fatima Azazmah** — *B.Sc. Computer Science, Birzeit University (2026)*
 Designed and developed the complete Flutter parent application and its Supabase/PostgreSQL
 integration, and contributed to the AI, Python (Raspberry Pi), and hardware components of the
 wider system.
