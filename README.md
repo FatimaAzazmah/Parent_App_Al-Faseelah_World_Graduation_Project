@@ -222,10 +222,6 @@ including the application architecture, the Supabase service layer, the
 authentication system, the localisation and theming systems, the shared UI
 components, the BLE integration, and the application screens.
 
-## License
-
-See [COPYRIGHT](COPYRIGHT). All rights reserved.
-
 ---
 
 ## 👩‍💻 Author & Credits
