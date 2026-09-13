@@ -1,5 +1,5 @@
 name: pearant_app
-description: "A new Flutter project."
+description: "Bilingual (Arabic/English) Flutter companion app for Al-Faseelah World — an AI-powered educational toy for children aged 4-9."
 publish_to: 'none'
 
 version: 1.0.0+1

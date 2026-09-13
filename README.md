@@ -143,9 +143,39 @@ lib/
 │   └── ble_service.dart              # BLE link to the toy
 ├── screens/                      # 19 UI screens
 └── utils/                        # Bilingual strings & theme-aware colors
+
+test/
+└── models_test.dart              # 19 unit tests over the data layer
 ```
 
-*~19k lines of Dart · 19 screens · 7 services · fully bilingual · light & dark themes.*
+*~19k lines of Dart · 19 screens · 7 services · 19 unit tests · fully bilingual · light & dark themes.*
+
+---
+
+## 🧪 Tests
+
+The data layer is covered by unit tests — the models sit between Supabase and the UI, so
+every field they decode is a field the app can crash on. The tests use rows shaped like the
+ones the toy and the app actually exchange, including the rough edges: missing keys, counts
+that arrive as strings, and timestamps that failed to serialise.
+
+```bash
+flutter test
+```
+
+```
+00:01 +19: All tests passed!
+```
+
+| Suite | What it covers |
+|-------|----------------|
+| `Child.fromJson` | Full rows, empty rows and their defaults, unparseable timestamps, `toJson` round-trip |
+| `Child.displayName` | Arabic/English name selection as the app locale changes, and the fallback when no English name was entered |
+| `Child.copyWith` | Partial updates, and clearing optional fields only when explicitly asked |
+| `BehaviorGoal.progressPercent` | Fraction completed, clamping when a child overshoots the target, and a zero target instead of dividing by zero |
+| `BehaviorGoal.fromSupabase` | snake_case column mapping, numeric coercion, strict `is_completed` handling |
+| `BehaviorGoal.toSupabaseInsert` | Omitting `completed_at` while a goal is in progress, and including it once finished |
+| `Session.fromJson` | Nested activities, zone visit counts, and sessions that are still running |
 
 ---
 
@@ -215,21 +245,15 @@ than failing with an obscure error.
 
 ---
 
-## Authorship
-
-The Flutter parent application was designed and developed by **Fatima Azazmah**,
-including the application architecture, the Supabase service layer, the
-authentication system, the localisation and theming systems, the shared UI
-components, the BLE integration, and the application screens.
-
----
-
 ## 👩‍💻 Author & Credits
 
 **Fatima Azazmah** — *B.Sc. Computer Science, Birzeit University (2026)*
-Designed and developed the complete Flutter parent application and its Supabase/PostgreSQL
-integration, and contributed to the AI, Python (Raspberry Pi), and hardware components of the
-wider system.
+
+Designed and developed the complete Flutter parent application: the application
+architecture, the Supabase service layer, the authentication system, the localisation and
+theming systems, the shared UI components, the BLE integration, all 19 screens, and the
+model test suite. Also contributed to the AI, Python (Raspberry Pi), and hardware
+components of the wider system.
 
 This app is part of the graduation project **“Al‑Faseelah World: An AI‑Powered Tangible
 Educational System with a Parent Companion App for Language, Values, and Behavioral Learning,”**
